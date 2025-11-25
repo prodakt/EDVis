@@ -12,23 +12,23 @@ This 2–3 hour workshop introduces participants to the essential concepts and p
 # Table of Contents
 
 ### Main Sections
-1. [Introduction](#introduction)  
-2. [Technical Fundamentals](#technical-fundamentals)  
+1. [Introduction](#introduction)
    - [Pixels, PPI, DPI](#pixels-ppi-dpi)  
    - [Image Resolution](#image-resolution)  
    - [RGB vs CMYK](#rgb-vs-cmyk)  
    - [Raster vs Vector Graphics](#raster-vs-vector-graphics)  
-3. [Principles of Good Scientific Visualization](#principles-of-good-scientific-visualization)  
-4. [Molecular Graphics in PyMOL](#molecular-graphics-in-pymol)  
+3. [Minimum Hardware and Software Requirements](#2-minimum-hardware-and-software-requirements)
+4. [Principles of Good Scientific Visualization](#principles-of-good-scientific-visualization)  
+5. [Molecular Graphics in PyMOL](#molecular-graphics-in-pymol)  
    - [PyMOL Rendering Workflow](#pymol-rendering-workflow)  
    - [PyMOL Rendering Script](#pymol-rendering-script)  
-5. [Tools for Scientific Figure Preparation](#tools-for-scientific-figure-preparation)  
-6. [Data Visualization in R](#data-visualization-in-r)  
+6. [Tools for Scientific Figure Preparation](#tools-for-scientific-figure-preparation)  
+7. [Data Visualization in R](#data-visualization-in-r)  
    - [Base R Plots](#base-r-plots)  
    - [ggplot2 Fundamentals](#ggplot2-fundamentals)  
    - [Exporting Publication-Ready Figures](#exporting-publication-ready-figures)  
    - [Scatterplot: 2–7 Dimensions](#scatterplot-27-dimensions)  
-7. [Exercises](#exercises)
+8. [Exercises](#exercises)
 
 ---
 
@@ -49,7 +49,10 @@ Visualization is the process of transforming data, phenomena, or abstract inform
 #### **Pixel**
 The smallest unit of a raster image, defined by color and brightness.
 
+---
+
 ### PPI vs DPI
+
 | Term | Meaning | Used for |
 |------|---------|----------|
 | **PPI (Pixels Per Inch)** | pixel density on a display | screens |
@@ -57,54 +60,102 @@ The smallest unit of a raster image, defined by color and brightness.
 
 Scientific journals typically require **300 DPI** for figures.
 
-### Image resolution
+#### Illustration
+
+![](https://images.squarespace-cdn.com/content/v1/55942b87e4b0b32d29a6a718/1475072926824-8DF9TWOXRGL5FUMJVYEF/image-asset.jpeg?format=2500w)  
+Source: *Squarespace CDN / Online DPI Tutorial*
+
+---
+
+### Image Resolution and Graphic Size
+
 Defined as *width × height in pixels*.  
 Final physical size = pixels ÷ DPI.
 
+#### Illustration: Image Resolution
+
+![](https://cdn.mos.cms.futurecdn.net/rVFdr58RWyweYuMjw5yC7h-650-80.jpg.webp)  
+Source: *Future Publishing / Digital Camera World*
+
+---
+
 ### Color spaces
+
 - **RGB** — screen visualization  
 - **CMYK** — print production  
 
 Many journals require **RGB for online** and **CMYK for print versions**.
 
+#### Illustration: RGB vs CMYK
+
+![](https://usercontent.one/wp/www.schlaugemacht.net/wp-content/uploads/2021/01/tube-screen-1-1024x397.png)  
+Source: https://www.schlaugemacht.net/what-is-rgb-and-cmyk/
+
+---
+
 ### Raster vs vector
+
 | Type | Pros | Cons |
 |------|------|------|
 | **Raster (PNG, TIFF, JPG)** | good for photos, heatmaps | loses quality when scaled |
 | **Vector (PDF, SVG, EPS)** | fully scalable, ideal for plots | not suitable for photorealistic rendering |
 
----
+#### Illustration: Raster vs Vector Comparison
+
+![](https://blog.fileformat.com/pl/image/raster-vs-vector-images-a-brief-comparison/images/raster-vs-vector.jpg#center)  
+Source: https://blog.fileformat.com/pl/image/raster-vs-vector-images-a-brief-comparison/
 
 ---
 
-# 2. Technical Fundamentals
+
+# 2. Minimum Hardware and Software Requirements
 [↑ Back to top](#effective-data-visualization-in-research)
 
-## Pixels, PPI, DPI
-[↑ Back to top](#effective-data-visualization-in-research)
-
-<< content to be added >>
+To fully participate in the workshop and complete all exercises, the following hardware and software components are required or recommended:
 
 ---
 
-## Image Resolution
-[↑ Back to top](#effective-data-visualization-in-research)
+### **Required**
 
-<< content to be added >>
+#### **Computer with Internet Access**
+A laptop or desktop computer capable of connecting to the internet is essential.  
+Several exercises use online environments and external datasets.
+
+#### **Web Browser (Google Chrome, Firefox, Edge)**
+Participants must be able to access **Google Colab**, which requires:  
+- a modern web browser  
+- the ability to log in using a **Google account**
+
+#### **IrfanView**
+A lightweight and fast graphics utility used during the workshop for:  
+- reading image metadata  
+- changing DPI  
+- converting formats (TIFF, PNG)  
+- resizing and exporting figures  
+
+Download: https://www.irfanview.com/
 
 ---
 
-## RGB vs CMYK
-[↑ Back to top](#effective-data-visualization-in-research)
+### **Recommended**
 
-<< content to be added >>
+#### **PowerPoint + Excel**
+Useful for:  
+- quick prototyping of charts  
+- assembling multi-panel figures  
+- simple image layout preparation  
 
----
+Although not required for the course, these tools can speed up certain tasks.
 
-## Raster vs Vector Graphics
-[↑ Back to top](#effective-data-visualization-in-research)
+#### **Inkscape or CorelDRAW**
+Recommended for participants who want to refine high-quality figures.  
+Ideal for:  
+- vector graphics editing  
+- preparing final layouts for publication  
+- combining raster and vector components  
 
-<< content to be added >>
+Free option: https://inkscape.org/  
+Commercial option: https://www.coreldraw.com/
 
 ---
 
