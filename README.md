@@ -107,6 +107,52 @@ Source: https://blog.fileformat.com/pl/image/raster-vs-vector-images-a-brief-com
 
 ---
 
+### Rendering (Rasterization)
+
+Rendering is the computational process of generating a 2D image from a 3D model.  
+In the rasterization approach, 3D objects are projected onto a 2D screen and converted into pixels.  
+This method is fast and widely used in real-time graphics (e.g., video games, interactive viewers).
+
+Rasterization determines:
+- object visibility
+- shading and color on surfaces
+- projection from 3D to 2D pixel grid
+
+#### Illustration: Rasterization vs Ray Tracing  
+![](https://sapien.ucsd.edu/docs/2.2/_images/rst_vs_rt.png)  
+Source: https://sapien.ucsd.edu/docs/2.2/  
+
+More information:  
+https://blog.3sfarm.com/ray-tracing-vs-rasterization-key-differences-and-uses
+
+---
+
+### Ray Tracing
+
+Ray tracing is an advanced rendering method that simulates the physical behavior of light.  
+Virtual rays are cast from the camera through the scene to determine:
+- realistic shadows  
+- soft lighting  
+- reflections and refractions  
+- accurate occlusion  
+
+In molecular graphics (e.g., PyMOL), ray tracing significantly increases image clarity and publication quality.
+
+#### Illustration: Ray Tracing Example  
+![](https://d29g4g2dyqv443.cloudfront.net/sites/default/files/pictures/2018/RayTracing/ray-tracing-image-1.jpg)  
+Source: NVIDIA (Ray Tracing Demo)
+
+More information:  
+https://developer.nvidia.com/discover/ray-tracing
+
+
+#### **POV-Ray**
+POV-Ray is a classic high-quality ray-tracing engine capable of producing photorealistic images using scene description code.  
+Website: https://www.povray.org/
+
+
+
+---
 
 # 2. Minimum Hardware and Software Requirements
 [↑ Back to top](#effective-data-visualization-in-research)
@@ -156,6 +202,28 @@ Ideal for:
 
 Free option: https://inkscape.org/  
 Commercial option: https://www.coreldraw.com/
+
+#### **PyMOL**
+Recommended for generating high-quality molecular graphics.  
+PyMOL will be used in the workshop to demonstrate:
+- molecular representations (cartoon, sticks, surface)
+- color schemes for proteins, ligands, surfaces
+- lighting, shading, ambient occlusion
+- high-resolution rendering
+- ray tracing for publication-quality images
+
+Download / Info:  
+https://www.pymol.org/
+
+---
+
+#### **POV-Ray (Optional, curiosity only)**
+POV-Ray is an open-source ray-tracing engine capable of producing extremely high-quality photorealistic scenes.  
+While not required for the workshop, it demonstrates how raw scene description languages can produce physically accurate images.
+
+Website:  
+https://www.povray.org/
+
 
 ---
 
