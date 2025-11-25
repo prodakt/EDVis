@@ -484,24 +484,1262 @@ Source: https://opendatascience.com/3-things-your-boss-wont-care-about-in-your-d
 # 4. Molecular Graphics in PyMOL
 [↑ Back to top](#effective-data-visualization-in-research)
 
-## PyMOL Rendering Workflow
-[↑ Back to top](#effective-data-visualization-in-research)
 
-<< content to be added >>
+### 4.1 Why PyMOL for Scientific Visualization?
+
+PyMOL is one of the most widely used tools in structural biology for generating high-quality molecular graphics. It is free (Open-Source PyMOL), runs on all major platforms, and supports both graphical operations and a powerful command-line interface. This makes it ideal for reproducible scientific workflows, where figures can be generated programmatically using scripts instead of manual point-and-click operations.
+
+PyMOL is especially well suited for:
+- preparing publication-quality molecular renderings  
+- ray tracing (high-quality shading, reflections, shadows)  
+- flexible representation styles (cartoon, surface, sticks, mesh, spheres)  
+- highlighting protein–ligand interactions  
+- producing high-resolution figures (300–600 DPI)  
+- easily saving and re-running scripts to generate identical images  
+
+A major strength of PyMOL is that **every action accessible through the graphical interface can also be executed using typed commands**, such as:
+'''
+fetch 1crn
+show cartoon
+color cyan, chain A
+ray 3000, 3000
+png output.png, dpi=300
+'''
+
+
+This allows complete reproducibility and automated image generation — an essential aspect of modern scientific communication.
 
 ---
+
+### Alternative Molecular Visualization Software
+
+Several other molecular graphics programs are widely used in teaching and research. Each has strengths and limitations, and some are historically important in the development of molecular visualization:
+
+- **RasMol** — one of the earliest molecular viewers; extremely lightweight but limited in rendering quality.  
+- **RasTop** — a graphical front-end to RasMol, more user-friendly but still basic.  
+- **Cn3D (NCBI)** — focused on sequence–structure integration; educational and easy to use.  
+- **Swiss-PdbViewer (DeepView)** — classic tool for molecular modeling, mutagenesis, and basic graphics.  
+- **VMD (Visual Molecular Dynamics)** — extremely powerful for simulations, trajectories, and volumetric data; supports ray tracing via Tachyon.
+
+While these tools remain valuable, PyMOL is generally preferred for:
+- reproducible figure pipelines  
+- advanced ray-traced illustration  
+- scripting  
+- fast preparation of publication-level graphics  
+- cross-platform support  
+
+Because the goal of this workshop is to teach *effective* and *reproducible* molecular visualization, we will rely primarily on **PyMOL with command-line scripting**.
+
+### 4.2 PyMOL Rendering Workflow
+[↑ Back to top](#effective-data-visualization-in-research)
+
+
+This section demonstrates how to generate a high-quality molecular graphic in PyMOL, starting from a raw PDB structure and ending with a ray-traced, publication-ready figure. The goal is to show that PyMOL can produce professional-level illustrations quickly, reproducibly, and entirely through command-line scripting.
+
+The workflow below combines both GUI actions and **explicit typed commands**, which is essential for reproducibility.
+
+---
+
+### **Step 1 — Load a molecular structure**
+
+You can load structures either from the PDB database or from a local file.
+
+Using the PDB (recommended for live demos):
+
+
+```  
+fetch 1crn, async=0  
+```  
+
+From a local file:
+
+```  
+load myprotein.pdb  
+```  
+
+---
+
+### **Step 2 — Choose a molecular representation**
+
+The most common publication-ready style is **cartoon** for proteins.
+
+``` 
+hide everything  
+show cartoon  
+set cartoon_smooth_loops, 1  
+set cartoon_fancy_helices, 1  
+```
+
+Other options:
+- sticks  
+- lines  
+- spheres  
+- surface  
+
+Example:
+
+```  
+show sticks, resn LIG  
+```
+
+---
+
+### **Step 3 — Apply meaningful coloring**
+
+Use biologically relevant color schemes:
+
+By chain:
+
+``` 
+color cyan, chain A  
+color salmon, chain B  
+```
+
+By secondary structure:
+
+``` 
+util.cbss()  
+```
+
+By element (useful for ligands):
+
+```  
+util.cbag ligand  
+```
+
+Background color:
+
+```  
+bg_color white  
+```
+
+White background is recommended for journals.
+
+---
+
+### **Step 4 — Adjust the camera and viewing angle**
+
+Rotate and zoom using the mouse, then store the view:
+
+```  
+set_view (  
+    0.342, 0.678, 0.650,  
+    -0.939, 0.288, 0.189,  
+    -0.006, -0.676, 0.737,  
+    0.000, 0.000, -50.00  
+)  
+```
+
+(Example view matrix — PyMOL generates this automatically if you use "get_view")
+
+---
+
+### **Step 5 — Lighting, shading, and aesthetics**
+
+Good lighting dramatically improves the appearance.
+
+Basic lighting:
+
+```  
+set ambient, 0.3  
+set direct, 0.6  
+set specular, 0.4  
+set shininess, 12  
+```
+
+Shadows:
+
+```  
+set ray_shadows, 1  
+set ray_shadow_decay_factor, 0.1  
+```
+
+Anti-aliasing makes edges smooth:
+
+```  
+set antialias, 2  
+```
+
+Ambient occlusion (optional, increases realism):
+
+```  
+set ray_trace_gain, 0.1  
+set ray_opaque_background, off  
+```
+
+---
+
+### **Step 6 — Ray tracing (high-quality rendering)**
+
+Ray tracing computes physically inspired lighting, shadows, and reflections.
+
+Basic high-resolution render:
+
+```  
+ray 3000, 3000  
+```
+
+Higher quality (slower):
+
+```  
+ray 4000, 4000  
+```
+
+Fast preview render (lower resolution):
+
+```  
+ray 1200, 1200  
+```
+
+---
+
+### **Step 7 — Exporting the final figure**
+
+Save as PNG with high DPI:
+
+```  
+png figure.png, dpi=300  
+```
+
+Or specify exact dimensions:
+
+```  
+png figure.png, width=3000, height=3000, dpi=300  
+```
+
+Export PyMOL session (for later editing):
+
+```  
+save scene.pse  
+```
+
+---
+
 
 ## PyMOL Rendering Script
 [↑ Back to top](#effective-data-visualization-in-research)
 
-<< content to be added >>
+
+### 4.3 PyMOL Rendering Script — How to Write and Run PyMOL Scripts
+
+PyMOL scripts allow you to automate figure creation and guarantee reproducibility.  
+A script is simply a text file containing PyMOL commands executed in sequence.
 
 ---
 
-# 5. Tools for Scientific Figure Preparation
+## **1. What is a PyMOL script?**
+
+A PyMOL script is a plain text file with the extension:
+
+```  
+.pml  
+```
+
+It contains the same commands you would type into the PyMOL command line, for example:
+
+```  
+fetch 1crn  
+show cartoon  
+color cyan, chain A  
+ray 2000, 2000  
+png figure.png, dpi=300  
+```
+
+Running this script always produces the same figure — essential for reproducible research.
+
+---
+
+## **2. How to create a `.pml` script**
+
+1. Open any text editor (Notepad, VSCode, Sublime, nano, etc.)  
+2. Paste your PyMOL commands  
+3. Save as:
+
+```  
+render_myprotein.pml  
+```
+
+Make sure the file extension is **.pml**, not .txt.
+
+---
+
+## **3. How to run a script inside PyMOL (GUI)**
+
+Open PyMOL and type:
+
+```  
+@render_myprotein.pml  
+```
+
+The `@` symbol tells PyMOL to execute the file line by line.
+
+You can also run the script from:  
+**File → Run Script…**
+
+---
+
+## **4. Running PyMOL scripts in command-line mode (headless)**
+
+This is ideal for rendering many images automatically or on a remote server (no GUI needed).
+
+Example:
+
+```  
+pymol -cq render_myprotein.pml  
+```
+
+Meaning:  
+- **-c** → no GUI (command-line mode)  
+- **-q** → quiet mode  
+
+PyMOL will run the script and save the PNG automatically.
+
+---
+
+## **5. Example high-quality rendering script**
+
+File: `render_myprotein.pml`
+
+```  
+fetch 1crn  
+hide everything  
+show cartoon  
+set cartoon_smooth_loops, 1  
+color cyan, chain A  
+
+# Lighting  
+set ambient, 0.3  
+set direct, 0.6  
+set antialias, 2  
+set ray_shadows, 1  
+
+# High-resolution ray trace  
+ray 3000, 3000  
+png output.png, dpi=300  
+```
+
+Run inside PyMOL:
+
+```  
+@render_myprotein.pml  
+```
+
+Run without GUI:
+
+```  
+pymol -cq render_myprotein.pml  
+```
+
+---
+#### quick run example
+Every PyMOL command can be placed in a `.pml` script:
+Example script file `render_myprotein.pml`:
+
+```  
+fetch 1crn  
+hide everything  
+show cartoon  
+color cyan, chain A  
+set ambient, 0.3  
+set direct, 0.6  
+set antialias, 2  
+ray 3000, 3000  
+png output.png, dpi=300  
+```
+
+Run the script:
+
+```  
+@render_myprotein.pml  
+```
+This ensures that your figure can always be regenerated — essential for transparent and reproducible science.
+
+---
+
+### 4.4 Tips for Publication-Quality Molecular Graphics
+
+High-quality molecular graphics rely on clear design principles, careful control of rendering parameters, and consistent formatting across all figures in a manuscript. The following guidelines summarize best practices derived from structural biology literature and widely accepted visualization standards.
+
+---
+
+## **1. Use clean and simple backgrounds**
+
+A solid **white background** is preferred for most journals.
+
+```  
+bg_color white  
+```
+
+Avoid gradients or dark backgrounds in publication figures (acceptable for talks but not journals).
+
+---
+
+## **2. Choose representations that match the scientific message**
+
+- **cartoon** → most common for proteins  
+- **sticks** → ligands or key residues  
+- **surface** → pockets, interfaces  
+- **spheres** → metal ions or detailed focuses  
+- **mesh** → electron density maps  
+
+Highlight interactions by combining representations:
+
+```  
+show cartoon  
+show sticks, resn LIG  
+```
+
+---
+
+## **3. Use biologically meaningful and consistent colors**
+
+Examples:
+- chains: cyan, salmon, light blue, light green  
+- ligands: bright colors (yellow, orange)  
+- ions: purple (Mg²⁺), orange (Fe³⁺), green (Cl⁻)  
+
+Avoid oversaturated colors.
+
+```  
+color salmon, chain A  
+color cyan, chain B  
+```
+
+Use colorblind-safe palettes when possible.
+
+---
+
+## **4. Improve lighting for professional appearance**
+
+Good lighting increases readability and perceived depth.
+
+Recommended:
+
+```  
+set ambient, 0.3  
+set direct, 0.6  
+set specular, 0.4  
+set shininess, 12  
+```
+
+Avoid overly dark shadows; adjust decay:
+
+```  
+set ray_shadows, 1  
+set ray_shadow_decay_factor, 0.1  
+```
+
+---
+
+## **5. Always enable antialiasing**
+
+Smooths jagged edges and makes text cleaner:
+
+```  
+set antialias, 2  
+```
+
+---
+
+## **6. Use high-resolution ray tracing**
+
+Minimum for journals: **300 DPI**  
+For complex figures: **4000 px** or more.
+
+```  
+ray 3000, 3000  
+png figure.png, dpi=300  
+```
+
+If cutting out subregions later, render bigger: e.g. 5000–6000 px.
+
+---
+
+## **7. Reduce clutter**
+
+Avoid:
+- too many labels  
+- overly large atoms  
+- unnecessary surfaces  
+- grid lines, axes, frames, shadows that obscure the protein  
+
+Emphasize the message, not the software.
+
+Minimalist labeling example:
+
+```  
+label resi 45 and name CA, "Arg45"  
+set label_size, 18  
+```
+
+---
+
+## **8. Carefully orient the protein**
+
+Good orientation improves interpretability:
+- backbone slightly tilted  
+- binding pockets facing viewer  
+- ligand exposed but not cut off  
+- avoid top-down “flat” views  
+
+Use `orient` and fine-tune the camera manually:
+
+```  
+orient  
+```
+
+Store views:
+
+```  
+set_view ( … )  
+```
+
+---
+
+## **9. Highlight key features**
+
+Examples:
+- Binding site residues  
+- Allosteric sites  
+- Mutations  
+- Ligands and cofactors  
+- Water molecules in the catalytic pocket  
+
+Selections make this easy:
+
+```  
+select pocket, byres (chain A within 4 of resn LIG)  
+show sticks, pocket  
+```
+
+---
+
+## **10. Maintain consistency across all figures in the manuscript**
+
+Uniform:
+- background  
+- font size  
+- line thickness  
+- color palettes  
+- rendering settings  
+- resolution  
+
+Store a standard script (template), e.g.:
+
+```  
+@figure_settings.pml  
+```
+
+---
+
+## **11. Use transparency appropriately**
+
+To show ligands inside pockets:
+
+```  
+set transparency, 0.3, surface  
+```
+
+Do not over-use transparency — it reduces clarity when overdone.
+
+---
+
+## **12. Export vector overlays when needed**
+
+For hybrid figures (vector text + raster protein):
+
+1. Export transparent PNG from PyMOL  
+2. Combine labels/panels in Inkscape or Illustrator
+
+This preserves the quality of the molecular rendering while keeping text as vector graphics.
+
+---
+
+## **13. Check final files at 100% and 300% zoom**
+
+Ensures no:
+- pixelation  
+- jagged edges  
+- inconsistent lighting  
+- mislabeled residues  
+- truncated atoms  
+
+Many mistakes are only visible at high zoom.
+
+---
+
+## **14. Recommended rendering presets**
+
+You can define custom presets to maintain consistency.
+
+Example preset file `hq_settings.pml`:
+
+```  
+set antialias, 2  
+set ambient, 0.3  
+set direct, 0.6  
+set ray_shadows, 1  
+set ray_shadow_decay_factor, 0.1  
+set specular, 0.4  
+set shininess, 12  
+```
+
+Load once per session:
+
+```  
+@hq_settings.pml  
+```
+
+---
+
+These guidelines will help you produce clear, consistent, and professional molecular figures suitable for scientific journals and presentations.
+
+---
+
+### 4.5 Common Mistakes in Molecular Graphics (and How to Fix Them)
+
+Even small errors in molecular visualization can significantly reduce clarity, distort interpretation, or make a figure look unprofessional. This section provides a practical overview of the most frequent mistakes made by beginners — and how to correct them using simple PyMOL techniques.
+
+---
+
+## **1. Jagged edges (poor smoothing)**
+
+**Cause:**  
+Ray tracing or screenshots made without antialiasing.
+
+**Fix:**  
+Enable antialiasing for smooth edges.
+
+```  
+set antialias, 2  
+```
+
+---
+
+## **2. Overly dark or unrealistic shadows**
+
+**Cause:**  
+Default shadow settings or harsh lighting.
+
+**Fix:**  
+Reduce shadow strength; add ambient light.
+
+```  
+set ray_shadows, 1  
+set ray_shadow_decay_factor, 0.1  
+set ambient, 0.3  
+set direct, 0.6  
+```
+
+---
+
+## **3. Colors too saturated or inconsistent**
+
+**Cause:**  
+Random colors assigned to chains or residues.
+
+**Fix:**  
+Use biological, muted color palettes.
+
+```  
+color cyan, chain A  
+color salmon, chain B  
+```
+
+Avoid neon green, bright magenta, intense red — they distract and do not reproduce well in print.
+
+---
+
+## **4. Ligands not visible / lost in protein surface**
+
+**Cause:**  
+Surface hides ligand; poor orientation.
+
+**Fix:**  
+Expose ligand with sticks and transparent surface.
+
+```  
+show sticks, resn LIG  
+set transparency, 0.3, surface  
+```
+
+---
+
+## **5. Flat, low-contrast images**
+
+**Cause:**  
+Weak lighting, no occlusion, poor depth cues.
+
+**Fix:**  
+Add specular light, adjust shininess, use moderate shadows.
+
+```  
+set specular, 0.4  
+set shininess, 12  
+set ambient, 0.25  
+```
+
+---
+
+## **6. Misaligned orientation / poor camera view**
+
+**Cause:**  
+Random camera angle; protein appears flat.
+
+**Fix:**  
+Use `orient` + manual fine tuning.
+
+```  
+orient  
+```
+
+Then rotate slightly to show depth and binding pocket layout.
+
+---
+
+## **7. Labels too large or too small**
+
+**Cause:**  
+Default label size rarely fits publication standards.
+
+**Fix:**  
+Use consistent label size and minimal number of labels.
+
+```  
+set label_size, 18  
+label resi 45 and name CA, "Arg45"  
+```
+
+Do not label everything — emphasize only essential residues.
+
+---
+
+## **8. Using screenshots instead of ray tracing**
+
+**Cause:**  
+Students often use the “Screenshot” button.
+
+**Fix:**  
+Use ray tracing for professional-quality figures.
+
+```  
+ray 3000, 3000  
+png figure.png, dpi=300  
+```
+
+Screenshots should be used only for quick previews.
+
+---
+
+## **9. Pixelated figures due to small render size**
+
+**Cause:**  
+Rendering at low resolution (e.g., 800×600 px).
+
+**Fix:**  
+Always render at **3000 px or more** for journal figures.
+
+```  
+ray 4000, 4000  
+png figure.png, dpi=300  
+```
+
+---
+
+## **10. Too much transparency**
+
+**Cause:**  
+Overusing transparency makes figures “foggy” and unclear.
+
+**Fix:**  
+Use transparency sparingly (0.2–0.4).
+
+```  
+set transparency, 0.3, surface  
+```
+
+Overuse destroys contrast and makes the structure hard to read.
+
+---
+
+## **11. Protein surface too glossy or plasticky**
+
+**Cause:**  
+Excessive specular reflections and shininess.
+
+**Fix:**  
+Tone down specular highlights.
+
+```  
+set specular, 0.2  
+set shininess, 8  
+```
+
+---
+
+## **12. Mixing background colors across figures**
+
+Consistency matters. Different backgrounds across panels look unprofessional.
+
+**Fix:**  
+Use **white** for papers, **dark** for presentations.
+
+```  
+bg_color white  
+```
+
+---
+
+## **13. Unnecessary or distracting elements**
+
+Examples:
+- axes  
+- default grid  
+- bounding box  
+- labels on every residue  
+- too many surfaces  
+
+**Fix:**  
+Remove all unnecessary GUI elements.
+
+```  
+set axes, off  
+set dash_gap, 0  
+```
+
+---
+
+## **14. Failing to document visualization settings**
+
+**Cause:**  
+Manual clicking in GUI produces non-reproducible images.
+
+**Fix:**  
+Always use PyMOL commands or scripts.
+
+```  
+@figure_settings.pml  
+```
+
+---
+These guidelines help avoid the most common pitfalls in molecular visualization and ensure that your figures meet the standards of high-impact scientific publications.
+---
+
+### 4.6 Example: From Raw PDB to Final Publication-Quality Figure
+
+This example demonstrates the complete process of transforming a raw PDB file into a clean, high-quality, publication-ready molecular graphic using PyMOL.  
+Every step includes explicit commands to ensure reproducibility.
+
+We will use the classical Crambin structure (PDB ID: **1CRN**) for demonstration.
+
+---
+
+## **Step 1 — Start with a raw PDB structure**
+
+Load a structure directly from the Protein Data Bank:
+
+```  
+fetch 1crn, async=0  
+```
+
+Initially, the protein appears with:
+- all atoms visible  
+- default coloring  
+- black background  
+- no smoothing or clarity enhancements  
+
+This is the “raw state” from which we start.
+
+---
+
+## **Step 2 — Clean the view and choose representations**
+
+1. Hide everything  
+2. Enable cartoon representation  
+3. Use smooth loops and fancy helices  
+4. Set a clean white background
+
+```  
+hide everything  
+show cartoon  
+set cartoon_smooth_loops, 1  
+set cartoon_fancy_helices, 1  
+bg_color white  
+```
+
+Color the protein by chain (crystallographic chains, if present):
+
+```  
+color lightblue, chain A  
+```
+
+If a ligand exists, highlight it:
+
+```  
+select ligand, organic  
+show sticks, ligand  
+color yellow, ligand  
+```
+
+---
+
+## **Step 3 — Improve lighting and shading**
+
+To achieve professional aesthetic quality, adjust lighting parameters:
+
+```  
+set ambient, 0.3  
+set direct, 0.6  
+set specular, 0.4  
+set shininess, 12  
+```
+
+Add soft shadows for depth:
+
+```  
+set ray_shadows, 1  
+set ray_shadow_decay_factor, 0.1  
+```
+
+Enable antialiasing (mandatory for print):
+
+```  
+set antialias, 2  
+```
+
+Optional: ambient occlusion (makes pockets and grooves more visible)
+
+```  
+set ray_trace_gain, 0.1  
+set ray_opaque_background, off  
+```
+
+---
+
+## **Step 4 — Adjust orientation for clarity**
+
+Automatically orient the molecule:
+
+```  
+orient  
+```
+
+Fine-tune rotation manually using the mouse.
+
+Store the final camera view:
+
+```  
+get_view  
+```
+
+You can copy/paste the resulting view matrix for perfect reproducibility in future renders.
+
+---
+
+## **Step 5 — Ray trace at publication resolution**
+
+Minimum for journals: **300 DPI**  
+Recommended width: **3000–4000 px**  
+High-end: **5000+ px** for cropping and multipanel figures
+
+High-resolution render:
+
+```  
+ray 3000, 3000  
+```
+
+For even better detail:
+
+```  
+ray 4000, 4000  
+```
+
+---
+
+## **Step 6 — Export the final figure**
+
+Save as PNG with 300 DPI:
+
+```  
+png crambin_final.png, dpi=300  
+```
+
+Save the PyMOL session (optional, recommended):
+
+```  
+save crambin_final.pse  
+```
+
+This allows re-rendering or editing later.
+
+---
+
+## **Step 7 — (Optional) Automate the entire process**
+
+Create a script `crambin_render.pml`:
+
+```  
+fetch 1crn  
+hide everything  
+show cartoon  
+set cartoon_smooth_loops, 1  
+bg_color white  
+color lightblue, chain A  
+set ambient, 0.3  
+set direct, 0.6  
+set antialias, 2  
+ray 3000, 3000  
+png crambin.png, dpi=300  
+```
+
+Run it:
+
+```  
+@crambin_render.pml  
+```
+
+This produces the same final image *every single time* — ensuring strict reproducibility.
+
+---
+
+## **Result**
+
+You now have a publication-quality molecular figure with:
+- smooth cartoon representation  
+- clean white background  
+- biologically meaningful colors  
+- enhanced lighting and shading  
+- ray-traced global illumination  
+- high resolution for journals  
+- fully reproducible script  
+
+This workflow mirrors best practices used in structural biology, drug design, and high-impact journals.
+
+
+
+---
+
+## **6. Why scripting matters**
+
+- **Reproducibility** — regenerate figures any time  
+- **Consistency** — all images share identical settings  
+- **Automation** — render dozens of variants without clicking  
+- **Portability** — scripts run on Windows, macOS, Linux  
+- **Version control** — store scripts in GitHub with your project  
+
+---
+
+This completes the PyMOL scripting tutorial and provides a reproducible workflow for generating publication-quality molecular graphics.
+
+
+---
+
+
+# 5. Software Ecosystem for Scientific Figure Preparation
 [↑ Back to top](#effective-data-visualization-in-research)
 
-<< content to be added >>
+
+> ⚠️ **IMPORTANT NOTE — PLEASE READ**  
+> The tools listed below represent **only a small subset** of the full software ecosystem available for bioinformatics, structural biology, data analysis, and figure preparation.  
+> There are **many, many more programs** widely used in research.  
+> The overview here is **intentionally simplified** for the purposes of this workshop and focuses on commonly used, broadly accessible tools.
+
+Scientific figure creation typically involves three distinct stages:  
+1) processing biological data and generating exploratory visualizations,  
+2) performing statistical analysis and creating analytical plots,  
+3) assembling final publication-ready graphics.
+
+Below is a structured overview of tools commonly used in modern scientific visualization, organized into **three functional levels**.
+
+---
+
+## **5.1 Level 1 — Tools for Processing and Visualizing Biological Data**
+
+These tools are used to inspect biological structures, genomic sequences, alignments, phylogenies, metagenomic profiles, annotations, and pathways.  
+They typically generate **exploratory or diagnostic visualizations**, not final journal figures.
+
+### **A. Genome Browsers**
+- **IGV (Integrative Genomics Viewer)** — BAM, VCF, GFF, BED; essential for NGS workflows.  
+- **UCSC Genome Browser** — rich annotation layers and comparative genomics.  
+- **Ensembl Genome Browser** — integrated orthology, synteny, and high-quality gene models.  
+- **Geneious (commercial)** — multi-purpose analysis and visualization suite.
+
+### **B. Sequence & Alignment Viewers**
+- **BioEdit** — classical sequence editor.  
+- **JalView** — advanced alignment viewer with PCA, annotation tracks, trees.  
+- **UGene** — graphical platform for MSA and motif search.  
+- **MEGA** — alignments + phylogenetic inference.
+
+### **C. Molecular Structure Visualization**
+- **PyMOL** — publication-quality molecular graphics (ray tracing, scripting).  
+- **UCSF Chimera / ChimeraX** — excellent for EM maps, surfaces, volumetric data.  
+- **VMD** — molecular dynamics trajectories and volumetric data.  
+- **RasMol / RasTop** — lightweight, educational tools.  
+- **Swiss-PdbViewer (DeepView)** — structural modeling and mutagenesis workflows.
+
+### **D. Functional Annotation, Networks, and Pathways**
+- **STRING** — protein interaction networks.  
+- **KEGG Mapper** — metabolic pathway annotation.  
+- **g:Profiler** — GO enrichment and functional annotation.  
+- **DAVID** — functional clustering.  
+- **BLAST** — local/global sequence similarity searches.  
+- **InterPro / Pfam** — domain architectures.
+
+### **E. Metagenomics Tools**
+- **QIIME2** — standard ecosystem for metagenomic diversity and taxonomy.  
+- **MetaPhlAn** — marker-gene-based community profiling.  
+- **Kraken2 / Bracken** — fast taxonomic classification of reads.
+
+### **F. NGS Processing Tools**
+- **FastQC** — sequencing quality control  
+- **Trimmomatic / fastp** — trimming  
+- **BWA, Bowtie2, STAR** — alignment  
+- **samtools / bcftools** — variant and alignment processing  
+- **featureCounts / HTSeq** — quantification  
+- **DESeq2 / EdgeR** — differential expression  
+
+---
+
+### **G. Specialized Visualization Tools (Python / Perl / Standalone)**
+
+These tools generate **complex biological visualizations** such as genomic relationships, synteny maps, circular plots, multi-layer genomic representations, or high-dimensional biological networks.
+
+#### **Circos**
+- One of the most iconic visualization frameworks in genomics  
+- Creates circular genome plots (chromosomes, synteny, links, heatmaps, ribbons)  
+- Ideal for:  
+  - genome comparisons  
+  - synteny and rearrangements  
+  - multi-layer annotation tracks  
+  - interaction maps  
+  - evolutionary genomics  
+- Originally Perl-based; now also available through **Python wrappers** and **web tools**  
+- Extremely powerful but requires configuration files  
+- Used in many high-impact publications (Nature, Science, Cell)
+
+Other tools in this category:
+
+#### **UpSetR / UpSetPlot**
+- Visualization of complex set intersections  
+- Alternative to Venn diagrams for multi-set relationships
+
+#### **HiCExplorer / Juicebox**
+- Chromatin conformation maps (Hi-C)  
+- Multi-resolution interaction heatmaps
+
+#### **SUSHI / pyGenomeTracks**
+- Multi-track genomic figure generation (ChIP-seq, RNA-seq, ATAC-seq)
+
+**Role of this category:**  
+👉 These tools create **specialized high-dimensional biological visualizations** that cannot be generated by typical plotting libraries.
+
+---
+
+## **5.2 Level 2 — Statistical Analysis and Plotting Tools**
+
+These tools generate **analytical plots, tables, statistical summaries**, and exploratory graphs.
+
+### **R + ggplot2 (tidyverse)**
+- Reproducible scientific visualization standard  
+- Vector export capabilities (PDF, SVG)  
+- Extensive theming, labeling, multi-panel support
+
+### **Python (matplotlib, seaborn, plotly, bokeh)**
+- Highly flexible plotting ecosystem  
+- Matplotlib → classical scientific plots  
+- Seaborn → statistical visualizations  
+- Plotly/Bokeh → interactive graphics
+
+### **Excel**
+- Quick exploratory tool  
+- Limited aesthetics; often not suitable for publications
+
+### **Statistica, SPSS, JMP**
+- GUI-focused statistical platforms  
+- Produce analysis-driven plots
+
+### **GraphPad Prism**
+- Widely used in biomedical sciences  
+- Simple statistical tests + clean plots  
+- Good for quick figures; limited layout control
+
+---
+
+## **5.3 Level 3 — Tools for Final Publication-Ready Figures**
+
+These tools handle:
+- multi-panel composition  
+- typography and annotations  
+- vector layering  
+- DPI settings, color space (RGB/CMYK), and journal requirements  
+- export to PDF, TIFF, or EPS
+
+### **Vector Editors (for final figure assembly)**
+
+#### **Inkscape**
+- Free, open-source  
+- Ideal for composite figures, labels, arrows, vector text  
+- Works perfectly with PyMOL PNG + ggplot PDF
+
+#### **Adobe Illustrator**
+- Industry standard for final figure production  
+- Preferred by many high-impact journals  
+- Advanced vector and typography control
+
+#### **CorelDRAW**
+- Strong CMYK workflows  
+- Good PDF/X export support  
+- Common in Europe
+
+#### **Affinity Designer**
+- Affordable, professional-grade alternative  
+- Clean UI and powerful vector tools
+
+---
+
+### **Raster Editors**
+
+#### **IrfanView**
+- Extremely fast and lightweight  
+- Ideal for resizing, cropping, DPI adjustments, TIFF export  
+- Perfect for meeting technical journal specifications
+
+#### **GIMP**
+- Free alternative to Photoshop  
+- Layers, masks, color correction
+
+#### **Photoshop**
+- Professional raster editor  
+- 16-bit depth, CMYK workflows  
+- Standard in imaging-heavy disciplines
+
+#### **ImageMagick**
+- Command-line automation for batch processing  
+- Useful in reproducible pipelines
+
+---
+
+### **Presentation & Drafting Tools**
+
+#### **PowerPoint**
+- Effective for assembling drafts and multi-panel arrangements  
+- Export as PDF or high-res PNG
+
+#### **Keynote / Google Slides**
+- Good for collaborative drafts  
+- Not recommended for final journal-grade figures
+
+---
+
+## **Summary: Roles of the Three-Level Ecosystem**
+
+| Level | Purpose | Examples |
+|-------|---------|----------|
+| **1. Biological Data Tools** | Explore sequences, structures, alignments, pathways, NGS data | IGV, JalView, PyMOL, ChimeraX, KEGG, QIIME2, Circos, pyGenomeTracks |
+| **2. Statistical & Plotting Tools** | Analysis, tables, exploratory & analytical plots | R/ggplot2, Python, Excel, Prism |
+| **3. Publication-Quality Graphics Tools** | Final layout, typography, DPI control, export | Inkscape, Illustrator, Corel, IrfanView, GIMP |
+
+Together, these three layers represent a complete and flexible ecosystem spanning the full workflow from raw biological data to submission-ready scientific figures.
 
 ---
 
