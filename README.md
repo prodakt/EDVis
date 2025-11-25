@@ -423,7 +423,61 @@ https://www.povray.org/
 # 3. Principles of Good Scientific Visualization
 [↑ Back to top](#effective-data-visualization-in-research)
 
-<< content to be added >>
+
+Effective scientific visualization aims to communicate data clearly, accurately, and efficiently. The primary purpose of a figure is not to decorate a paper but to make complex information understandable at a glance. Good visualizations reduce cognitive load, highlight relationships within data, and guide the viewer toward correct interpretation. Poor visualization, in contrast, can mislead, disguise variability, exaggerate trends, or obscure important findings. 
+
+A well-designed figure should respect perceptual principles: humans interpret position, length, and angle more accurately than area, color intensity, or volume, which implies that some chart types (e.g., pie charts, 3D bar plots) inherently reduce interpretability. Consistent use of color, typography, and structure helps maintain visual coherence between related figures. Visual hierarchies should direct attention—major features should stand out, while minor elements remain subtle. Color should encode meaning rather than serve as decoration, and accessibility guidelines (e.g., colorblind-safe palettes) must be followed. 
+
+Clarity also depends on the elimination of unnecessary complexity: redundant grid lines, overly complex shading, and excessive labels distract rather than help. Figures intended for scientific publication must meet technical standards, including proper DPI, file format, and color space, to ensure accurate reproduction in print and on screen. The workflow should be reproducible—figures generated programmatically are more transparent and easier to update than manually edited images.
+
+These principles are widely discussed in the scientific visualization literature, including the works of Edward Tufte, Tamara Munzner, and Colin Ware, as well as methodological reviews focused on visualization for scientific communication.
+
+---
+
+### Key Principles (Summary)
+
+- Prioritize **clarity over decoration** — eliminate unnecessary visual noise.  
+- Use **appropriate encodings**: position > length > angle > area > color.  
+- Ensure **visual consistency** (fonts, colors, spacing).  
+- Apply **color meaningfully** and use colorblind-safe palettes.  
+- Maintain **hierarchy** — emphasize key elements, de-emphasize secondary ones.  
+- Avoid misleading shapes: no 3D bars, distorted axes, truncated baselines (unless justified).  
+- Ensure **reproducibility** using programmatic figure generation.  
+- Match **technical requirements** (DPI, file format, RGB/CMYK).  
+- Test figures at multiple presentation scales (screen, print, projector).  
+- Always align visualization with the scientific message.
+
+---
+
+### Recommended Literature and Scientific References
+
+**Foundational Books**
+- **Edward R. Tufte** – *The Visual Display of Quantitative Information* (landmark work on clarity, minimalism, and data–ink ratio).  
+- **Tamara Munzner** – *Visualization Analysis & Design* (formal framework for visualization design choices).  
+- **Colin Ware** – *Information Visualization: Perception for Design* (deep overview of human visual perception and how it affects figure design).  
+- **Stephen Few** – *Show Me the Numbers* (practical guidelines for quantitative charts).  
+
+**Scientific Articles / Reviews**
+- **Cleveland & McGill (1984)** – "Graphical Perception: Theory, Experimentation, and Application" (classic study ranking perceptual accuracy of different encodings).  
+- **Brewer (2015)** – ColorBrewer system and colorblind-safe palettes widely used in science.  
+- **Rougier et al. (2014)** – "Ten Simple Rules for Better Figures" – PLOS Computational Biology.  
+- **Weissgerber et al. (2015)** – "Beyond Bar and Line Graphs: Time for a New Data Presentation Paradigm" – The American Statistician (important critique of common bad charts).  
+- **Crameri et al. (2020)** – “The Misuse of Colour in Science” – Nature Communications (critical paper about colormaps, especially rainbow).  
+
+**Molecular Visualization–Specific**
+- **O’Donoghue et al. (2010)** – "Visualizing Biological Data" – Nature Methods.  
+- **Godwin et al. (2021)** – "Best Practices in Molecular Visualization" – Trends in Biochemical Sciences.  
+
+---
+
+### Additional Resource: Good and Bad Examples of Visualization
+
+A practical illustrated overview of effective and ineffective charts:  
+https://visiochart.com/blog/good-and-bad-examples-of-data-visualization
+
+
+![](https://opendatascience.com/wp-content/uploads/2019/03/Screen-Shot-2019-03-18-at-11.26.16-AM-640x300.png)  
+Source: https://opendatascience.com/3-things-your-boss-wont-care-about-in-your-data-visualizations
 
 ---
 
