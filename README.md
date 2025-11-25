@@ -46,8 +46,16 @@ Molecular graphics is a specialized branch of computer graphics dedicated to the
 #### **Visualization**
 Visualization is the process of transforming data, phenomena, or abstract information into graphical representations that facilitate understanding, analysis, and communication. It applies to quantitative data (e.g., plots, heatmaps), spatial structures (e.g., 3D renderings), and conceptual information. Effective visualization highlights patterns, relationships, and insights that may be difficult to detect from raw numerical or textual data.
 
-#### **Pixel**
-The smallest unit of a raster image, defined by color and brightness.
+#### **Pixel — with Color Depth**
+A pixel is the smallest addressable unit of a raster (bitmap) image.  
+Each pixel stores numerical color information defined by its **color depth** (bit depth), expressed as bits per channel (bpc).
+
+Common depths:
+- **8 bits per channel (8 bpc)** — 256 tonal values per channel, ~16.7 million colors (standard RGB)
+- **16 bits per channel (16 bpc)** — 65,536 values per channel (high-precision imaging)
+- **1 bit per pixel (1 bpp)** — black–white binary graphics
+
+Most scientific journals accept **8 bpc RGB TIFF**.
 
 ---
 
@@ -67,10 +75,19 @@ Source: *Squarespace CDN / Online DPI Tutorial*
 
 ---
 
+
 ### Image Resolution and Graphic Size
 
 Defined as *width × height in pixels*.  
 Final physical size = pixels ÷ DPI.
+
+It depends on pixel count and DPI:
+size_mm = (pixels / DPI) × 25.4
+
+Example:  
+3000 px at 300 DPI → **254 mm** printed width.
+
+Resolution determines detail while DPI determines printing density.
 
 #### Illustration: Image Resolution
 
@@ -79,12 +96,84 @@ Source: *Future Publishing / Digital Camera World*
 
 ---
 
-### Color spaces
+### Color Spaces
 
 - **RGB** — screen visualization  
 - **CMYK** — print production  
 
-Many journals require **RGB for online** and **CMYK for print versions**.
+A **color space** defines how numerical color values map to visible colors.  
+Different devices (monitors, printers, cameras) interpret and reproduce colors differently.
+
+Most scientific journals require:
+- **RGB** for online submission  
+- **CMYK** for print-ready figures  
+
+---
+
+#### **RGB (Red–Green–Blue)**
+
+RGB is an **additive color model** used for screens.  
+Each pixel’s color is defined by the intensity of three channels:
+
+R, G, B ∈ 0–255
+
+Examples:
+- **(255, 0, 0)** → pure red  
+- **(0, 255, 0)** → pure green  
+- **(0, 0, 255)** → pure blue  
+- **(255, 255, 255)** → white (all channels at max brightness)  
+- **(0, 0, 0)** → black (no emitted light)  
+- **(255, 0, 100)** → a shade of magenta/purple  
+- **(200, 200, 0)** → yellowish tone
+
+RGB colors are also commonly encoded in **hexadecimal notation**:
+#RRGGBB
+
+
+Examples:
+- **#FF0000** → red  
+- **#00FF00** → green  
+- **#0000FF** → blue  
+- **#FFFFFF** → white  
+- **#000000** → black  
+- **#FF0064** → pink/magenta shade  
+- **#C8C800** → yellow-green  
+
+Hex values range from **00** (0) to **FF** (255).
+
+---
+
+#### **CMYK (Cyan–Magenta–Yellow–Key Black)**
+
+CMYK is a **subtractive color model** used in printing.  
+Instead of emitting light, inks absorb (subtract) parts of the spectrum.
+
+Color is defined by four components:
+
+C, M, Y, K ∈ 0–100%
+
+Examples:
+- **(0%, 100%, 100%, 0%)** → red  
+- **(100%, 0%, 100%, 0%)** → green  
+- **(100%, 100%, 0%, 0%)** → blue  
+- **(0%, 0%, 0%, 0%)** → white (no ink)  
+- **(0%, 0%, 0%, 100%)** → black  
+- **(0%, 50%, 0%, 0%)** → magenta tint  
+- **(0%, 0%, 50%, 0%)** → yellow tint  
+
+Because CMYK describes ink coverage, **a pixel’s color is created by overlapping inks**:
+- more cyan ink → more blue/green coloration  
+- more magenta ink → more red/pink coloration  
+- more yellow ink → more yellow/orange coloration  
+- adding black reduces brightness and saturates shadows  
+
+---
+
+### Journal Conventions
+- Online PDFs → **RGB**  
+- Print production → **CMYK**  
+- Some publishers perform automatic conversion  
+- For complex figures (Ray-traced molecules, microscopy) RGB is generally preferred  
 
 #### Illustration: RGB vs CMYK
 
