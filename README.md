@@ -35,7 +35,45 @@ This 2–3 hour workshop introduces participants to the essential concepts and p
 # 1. Introduction
 [↑ Back to top](#effective-data-visualization-in-research)
 
-<< content to be added >>
+### Definitions
+
+#### **Computer Graphics**
+Computer graphics is a field of computer science focused on generating, processing, and presenting visual content using computational methods. It encompasses techniques such as raster and vector image creation, 3D modeling, rendering, and data visualization. Its primary purpose is to communicate information through visual representations, ensuring clarity, quality, realism, or aesthetic appeal depending on the application.
+
+#### **Molecular Graphics**
+Molecular graphics is a specialized branch of computer graphics dedicated to the visual representation of biochemical structures and phenomena at the atomic and molecular levels. It relies on experimental structural data (e.g., PDB, Cryo-EM, NMR) and computational modeling to depict molecular shapes, geometry, interactions, and properties. Molecular graphics serves not only as a form of illustration but also as a tool for structural analysis, drug design, and the communication of biological research results.
+
+#### **Visualization**
+Visualization is the process of transforming data, phenomena, or abstract information into graphical representations that facilitate understanding, analysis, and communication. It applies to quantitative data (e.g., plots, heatmaps), spatial structures (e.g., 3D renderings), and conceptual information. Effective visualization highlights patterns, relationships, and insights that may be difficult to detect from raw numerical or textual data.
+
+#### **Pixel**
+The smallest unit of a raster image, defined by color and brightness.
+
+### PPI vs DPI
+| Term | Meaning | Used for |
+|------|---------|----------|
+| **PPI (Pixels Per Inch)** | pixel density on a display | screens |
+| **DPI (Dots Per Inch)** | ink dot density | print |
+
+Scientific journals typically require **300 DPI** for figures.
+
+### Image resolution
+Defined as *width × height in pixels*.  
+Final physical size = pixels ÷ DPI.
+
+### Color spaces
+- **RGB** — screen visualization  
+- **CMYK** — print production  
+
+Many journals require **RGB for online** and **CMYK for print versions**.
+
+### Raster vs vector
+| Type | Pros | Cons |
+|------|------|------|
+| **Raster (PNG, TIFF, JPG)** | good for photos, heatmaps | loses quality when scaled |
+| **Vector (PDF, SVG, EPS)** | fully scalable, ideal for plots | not suitable for photorealistic rendering |
+
+---
 
 ---
 
