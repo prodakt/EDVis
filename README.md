@@ -98,9 +98,6 @@ Source: *Future Publishing / Digital Camera World*
 
 ### Color Spaces
 
-- **RGB** — screen visualization  
-- **CMYK** — print production  
-
 A **color space** defines how numerical color values map to visible colors.  
 Different devices (monitors, printers, cameras) interpret and reproduce colors differently.
 
@@ -177,17 +174,124 @@ Because CMYK describes ink coverage, **a pixel’s color is created by overlappi
 
 #### Illustration: RGB vs CMYK
 
-![](https://usercontent.one/wp/www.schlaugemacht.net/wp-content/uploads/2021/01/tube-screen-1-1024x397.png)  
-Source: https://www.schlaugemacht.net/what-is-rgb-and-cmyk/
+![](https://www.thevisualpro.com/wp-content/uploads/2023/08/Which_to_choose_CMYK_vs_RGB_VisualPro.jpg)  
+Source: https://www.thevisualpro.com/blog/color-questions-what-is-cymk-what-is-rgb
 
 ---
 
-### Raster vs vector
+### Raster (Bitmap) Graphics
 
-| Type | Pros | Cons |
-|------|------|------|
-| **Raster (PNG, TIFF, JPG)** | good for photos, heatmaps | loses quality when scaled |
-| **Vector (PDF, SVG, EPS)** | fully scalable, ideal for plots | not suitable for photorealistic rendering |
+Raster graphics (bitmap images) store visual information as a **matrix of individual pixels**, where each pixel represents a single color value.  
+Bitmaps are ideal for representing continuous-tone imagery such as photographs, microscopy, or ray-traced molecular renderings.
+
+#### How raster images work
+A bitmap is defined by:
+- **resolution** (number of pixels, e.g., 3000 × 2000)
+- **color depth** (bits per pixel or per channel)
+- **color space** (RGB, CMYK)
+
+Each pixel is a discrete sample; the more pixels (higher resolution), the more detail can be represented.
+
+#### Strengths of raster graphics
+- Excellent for complex, natural images (photos, gradients, shadows)
+- Necessary for ray tracing and photorealistic rendering
+- Supports high bit-depth formats (8 bpc, 16 bpc)
+- Ideal for heatmaps, microscopy, tomography, 3D renderings
+
+#### Weaknesses of raster graphics
+- **Resolution-dependent**: scaling up causes pixelation
+- Very large files at high resolution (especially TIFF)
+- Editing can degrade quality (compression artifacts in JPG)
+- Text and lines may appear soft after resizing
+
+#### Common raster formats
+- **PNG** – lossless compression, good for figures and transparency  
+- **TIFF** – high-quality, supports LZW/ZIP compression, publication standard  
+- **JPG** – lossy compression, small files, not recommended for scientific plots  
+- **BMP** – uncompressed, outdated  
+
+
+---
+
+### Vector Graphics
+
+Vector graphics represent images using **mathematical primitives**:
+- points  
+- lines  
+- curves (Bézier curves)  
+- geometric shapes  
+- text as scalable outlines  
+
+Vector images are *resolution-independent*, meaning they can scale infinitely without quality loss.
+
+#### How vector images work
+A plot line in a vector graphic is stored as:
+- coordinates  
+- stroke width  
+- color  
+- mathematical instructions for drawing  
+
+A font glyph is stored as:
+- outline paths  
+- no pixels until rendered on screen  
+
+#### Strengths of vector graphics
+- Infinitely scalable — no pixelation at any zoom level
+- Extremely sharp text, axes, and plot symbols
+- Perfect for line art, diagrams, charts, multipanel figures
+- Smaller file size for simple graphics
+- Editors (Inkscape, Illustrator) allow precise post-processing
+
+#### Weaknesses of vector graphics
+- Cannot represent continuous-tone images realistically  
+  (no gradients, shadows, textures unless rasterized)
+- Poor at representing complex molecular surfaces or ray tracing
+- Large file sizes if thousands of primitives (e.g., huge scatterplots)
+- Some journals mishandle embedded fonts in EPS/PDF
+
+#### Common vector formats
+- **PDF** – universal vector format, ideal for scientific plots  
+- **SVG** – editable vector format for web and Inkscape  
+- **EPS** – legacy scientific format, still required by some journals  
+
+
+---
+
+### Raster vs Vector – Deeper Comparison
+
+| Feature | Raster | Vector |
+|--------|--------|--------|
+| **Representation** | Pixels in a grid | Mathematical primitives |
+| **Scaling** | Loses quality (pixelation) | Infinite scalability |
+| **Best for** | Photos, ray tracing, microscopy | Plots, diagrams, labels, schematics |
+| **Shadows/Gradients** | Natural, continuous | Difficult, often must be rasterized |
+| **File size** | Large at high DPI | Small unless extreme complexity |
+| **Post-processing** | Can degrade quality | Highly flexible editing |
+| **Journal preference** | TIFF for images | PDF/SVG for plots |
+| **Color depth** | 8/16 bits per channel | Typically limited (solid fills) |
+| **Rendering pipeline** | Sampled image | Instruction set |
+
+---
+
+### Practical Scientific Recommendations
+
+✔ Use **raster graphics** for:
+- PyMOL ray-traced molecular renderings  
+- microscopy images  
+- gels, blots, radiology data  
+- heatmaps and continuous data fields  
+
+✔ Use **vector graphics** for:
+- ggplot2 plots  
+- line charts, bar plots, scatter plots  
+- diagrams, workflows, figure layouts  
+- axis labels, text, arrows, annotations  
+
+✔ Mixed figures:
+- Combine **vector panels** (A, B, C) with **embedded raster sub-panels**  
+- Always export from R/Python as **PDF (vector)** unless using rasterization on purpose  
+
+---
 
 #### Illustration: Raster vs Vector Comparison
 
