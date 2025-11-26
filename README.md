@@ -816,6 +816,8 @@ Define exact resolution:
 ```  
 png hemoglobin_6kap.png, width=3000, height=3000, dpi=300  
 ```
+[<img src="files/hemoglobin_6kap_v2.png" width="420">](files/hemoglobin_6kap_v2.png)
+**Figure:** Example high-quality PyMOL rendering of hemoglobin (6KAP).
 
 Save session:
 
