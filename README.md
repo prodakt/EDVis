@@ -593,7 +593,7 @@ Highlight carbon monoxide:
 
 ```  
 select co, resn CMO  
-show sticks, co  
+show spheres, co  
 color yellow, co  
 ```
 
