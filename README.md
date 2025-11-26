@@ -533,113 +533,143 @@ Because the goal of this workshop is to teach *effective* and *reproducible* mol
 ## 4.2 PyMOL Rendering Workflow
 [↑ Back to top](#effective-data-visualization-in-research)
 
+This section demonstrates how to generate a high-quality molecular graphic in PyMOL, starting from a **real biological example**:  
+**human hemoglobin in complex with heme and carbon monoxide (PDB: 6KAP)**.
 
-This section demonstrates how to generate a high-quality molecular graphic in PyMOL, starting from a raw PDB structure and ending with a ray-traced, publication-ready figure. The goal is to show that PyMOL can produce professional-level illustrations quickly, reproducibly, and entirely through command-line scripting.
+The goal is to show that PyMOL can produce professional-level illustrations quickly, reproducibly, and entirely through command-line scripting.
 
-The workflow below combines both GUI actions and **explicit typed commands**, which is essential for reproducibility.
-
----
-
-### **Step 1 — Load a molecular structure**
-
-You can load structures either from the PDB database or from a local file.
-
-Using the PDB (recommended for live demos):
-
-
-```  
-fetch 1kap, async=0  
-```  
-
-From a local file:
-
-```  
-load myprotein.pdb  
-```  
+The workflow below combines GUI actions with explicit typed commands — essential for reproducibility.
 
 ---
 
-### **Step 2 — Choose a molecular representation**
+## **Step 1 — Load a molecular structure**
 
-The most common publication-ready style is **cartoon** for proteins.
+Load the structure from the PDB:
 
-``` 
+```  
+fetch 6kap, async=0  
+```
+
+Or load from a local file:
+
+```  
+load 6kap.pdb  
+```
+
+6KAP contains:
+- **two protein chains** (A and B)  
+- **heme cofactors** (residue HEM)  
+- **CO ligands** (residue CMO)  
+
+---
+
+## **Step 2 — Choose a molecular representation**
+
+Publication-ready default:
+
+```  
 hide everything  
 show cartoon  
 set cartoon_smooth_loops, 1  
 set cartoon_fancy_helices, 1  
 ```
 
-Other options:
-- sticks  
-- lines  
-- spheres  
-- surface  
+Complete list of commonly used representations:
+- `cartoon` – proteins  
+- `sticks` – ligands or key residues  
+- `surface` – pockets, interfaces  
+- `spheres` – atoms, ions  
+- `lines` – minimalistic backbone  
 
-Example:
+Highlighting the heme groups:
 
 ```  
-show sticks, resn LIG  
+select hemes, resn HEM  
+show sticks, hemes  
+color hotpink, hemes  
+```
+
+Highlight carbon monoxide:
+
+```  
+select co, resn CMO  
+show sticks, co  
+color yellow, co  
 ```
 
 ---
 
-### **Step 3 — Apply meaningful coloring**
+## **Step 3 — Apply meaningful coloring**
 
-Use biologically relevant color schemes:
+### **Coloring by chain (recommended for hemoglobin)**
 
-By chain:
-
-``` 
+```  
 color red, chain A  
-color green, chain B  
+color blue, chain B  
 ```
 
-By secondary structure:
+### **Coloring ligands**
 
-``` 
+```  
+color hotpink, resn HEM  
+color yellow, resn CMO  
+```
+
+### **Secondary structure coloring**
+
+```  
 util.cbss()  
 ```
 
-By element (useful for ligands):
+### **Element-based coloring for ligands**
 
 ```  
-util.cbag ligand  
+util.cbag hemes  
 ```
 
-Background color:
+### **Background**
+
+White is the journal standard:
 
 ```  
 bg_color white  
 ```
 
-White background is recommended for journals.
-
 ---
 
-### **Step 4 — Adjust the camera and viewing angle**
+## **Step 4 — Adjust the camera and viewing angle**
 
-Rotate and zoom using the mouse, then store the view:
+Orient the structure:
 
 ```  
-set_view (\
-     0.889923871,    0.115859874,    0.441145182,\
-     0.284228146,   -0.897309899,   -0.337711543,\
-     0.356717050,    0.425923288,   -0.831469476,\
-     0.000000000,    0.000000000, -169.119216919,\
-    23.661718369,  -19.782043457,   11.306533813,\
-   133.334884644,  204.903549194,  -20.000000000 )
+orient  
 ```
 
-(Example view matrix — PyMOL generates this automatically if you use "get_view")
+You may rotate with the mouse, then save the camera:
+
+```  
+get_view  
+```
+
+Example view matrix (PyMOL-generated):
+
+```  
+set_view (\  
+     0.889923871,  0.115859874,  0.441145182,\  
+     0.284228146, -0.897309899, -0.337711543,\  
+     0.356717050,  0.425923288, -0.831469476,\  
+     0.000000000,  0.000000000,-169.119216919,\  
+    23.661718369, -19.782043457, 11.306533813,\  
+   133.334884644, 204.903549194,-20.000000000 )  
+```
 
 ---
 
-### **Step 5 — Lighting, shading, and aesthetics**
+## **Step 5 — Lighting, shading, and aesthetics**
 
-Good lighting dramatically improves the appearance.
+Good lighting dramatically improves figure quality.
 
-Basic lighting:
+### **Basic lighting**
 
 ```  
 set ambient, 0.3  
@@ -648,20 +678,20 @@ set specular, 0.4
 set shininess, 12  
 ```
 
-Shadows:
+### **Shadows**
 
 ```  
 set ray_shadows, 1  
 set ray_shadow_decay_factor, 0.1  
 ```
 
-Anti-aliasing makes edges smooth:
+### **Anti-aliasing (mandatory for publication)**
 
 ```  
 set antialias, 2  
 ```
 
-Ambient occlusion (optional, increases realism):
+### **Ambient occlusion (optional for deeper contrast)**
 
 ```  
 set ray_trace_gain, 0.1  
@@ -670,23 +700,23 @@ set ray_opaque_background, off
 
 ---
 
-### **Step 6 — Ray tracing (high-quality rendering)**
+## **Step 6 — High-quality ray tracing**
 
-Ray tracing computes physically inspired lighting, shadows, and reflections.
+Ray tracing computes realistic lighting, soft shadows, and depth.
 
-Basic high-resolution render:
+### Standard publication-quality:
 
 ```  
 ray 3000, 3000  
 ```
 
-Higher quality (slower):
+### Higher resolution (recommended for cropping / multipanel figures):
 
 ```  
 ray 4000, 4000  
 ```
 
-Fast preview render (lower resolution):
+### Quick preview render:
 
 ```  
 ray 1200, 1200  
@@ -694,28 +724,29 @@ ray 1200, 1200
 
 ---
 
-### **Step 7 — Exporting the final figure**
+## **Step 7 — Export the final figure**
 
-Save as PNG with high DPI:
+Save as PNG at 300 DPI:
 
 ```  
-png figure.png, dpi=300  
+png hemoglobin_6kap.png, dpi=300  
 ```
 
-Or specify exact dimensions:
+Or define width & height explicitly:
 
 ```  
-png figure.png, width=3000, height=3000, dpi=300  
+png hemoglobin_6kap.png, width=3000, height=3000, dpi=300  
 ```
 
-Export PyMOL session (for later editing):
+Save PyMOL session for later editing:
 
 ```  
-save scene.pse  
+save 6kap_scene.pse  
 ```
 
 ---
 
+This workflow demonstrates how to turn a raw PDB file into a professional, publication-ready illustration of **hemoglobin with heme and CO ligands**.
 
 ## PyMOL Rendering Script
 [↑ Back to top](#effective-data-visualization-in-research)
