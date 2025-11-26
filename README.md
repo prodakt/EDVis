@@ -530,7 +530,7 @@ While these tools remain valuable, PyMOL is generally preferred for:
 
 Because the goal of this workshop is to teach *effective* and *reproducible* molecular visualization, we will rely primarily on **PyMOL with command-line scripting**.
 
-## 4.2 PyMOL Rendering Workflow
+### 4.2 PyMOL Rendering Workflow
 [↑ Back to top](#effective-data-visualization-in-research)
 
 This section demonstrates how to generate a high-quality molecular graphic in PyMOL, starting from a **real biological example**:  
@@ -538,7 +538,7 @@ This section demonstrates how to generate a high-quality molecular graphic in Py
 
 The goal is to show that PyMOL can produce professional-level illustrations quickly, reproducibly, and entirely through command-line scripting.
 
-The workflow below combines GUI actions with explicit typed commands — essential for reproducibility.
+The workflow combines GUI interactions with explicitly typed commands — essential for reproducibility.
 
 ---
 
@@ -557,9 +557,9 @@ load 6kap.pdb
 ```
 
 6KAP contains:
-- **two protein chains** (A and B)  
-- **heme cofactors** (residue HEM)  
-- **CO ligands** (residue CMO)  
+- **two protein chains** (A and B)
+- **heme cofactors** (residue HEM)
+- **CO ligands** (residue CMO)
 
 ---
 
@@ -574,14 +574,14 @@ set cartoon_smooth_loops, 1
 set cartoon_fancy_helices, 1  
 ```
 
-Complete list of commonly used representations:
-- `cartoon` – proteins  
-- `sticks` – ligands or key residues  
-- `surface` – pockets, interfaces  
-- `spheres` – atoms, ions  
-- `lines` – minimalistic backbone  
+Other commonly used representations:
+- `cartoon` – proteins
+- `sticks` – ligands or key residues
+- `surface` – pockets, interfaces
+- `spheres` – atoms, ions
+- `lines` – minimalistic backbone
 
-Highlighting the heme groups:
+Highlight heme groups:
 
 ```  
 select hemes, resn HEM  
@@ -601,7 +601,7 @@ color yellow, co
 
 ## **Step 3 — Apply meaningful coloring**
 
-### **Coloring by chain (recommended for hemoglobin)**
+### **Color by chain (recommended for hemoglobin)**
 
 ```  
 color red, chain A  
@@ -621,7 +621,7 @@ color yellow, resn CMO
 util.cbss()  
 ```
 
-### **Element-based coloring for ligands**
+### **Element-based ligand coloring**
 
 ```  
 util.cbag hemes  
@@ -629,7 +629,7 @@ util.cbag hemes
 
 ### **Background**
 
-White is the journal standard:
+White is journal standard:
 
 ```  
 bg_color white  
@@ -639,28 +639,28 @@ bg_color white
 
 ## **Step 4 — Adjust the camera and viewing angle**
 
-Orient the structure:
+Automatic orientation:
 
 ```  
 orient  
 ```
 
-You may rotate with the mouse, then save the camera:
+Save a defined camera angle:
 
 ```  
 get_view  
 ```
 
-Example view matrix (PyMOL-generated):
+Example PyMOL-generated view matrix:
 
 ```  
-set_view (\
-     0.298714757,    0.224853694,   -0.927473247,\
-     0.643237948,    0.670481503,    0.369722664,\
-     0.704992652,   -0.707027197,    0.055647239,\
-    -0.000051431,    0.000002850,  -85.109474182,\
-    22.882591248,  -24.646930695,    5.819342613,\
-    49.322834015,  120.891410828,  -20.000000000 ) 
+set_view (\  
+     0.298714757,    0.224853694,   -0.927473247,\  
+     0.643237948,    0.670481503,    0.369722664,\  
+     0.704992652,   -0.707027197,    0.055647239,\  
+    -0.000051431,    0.000002850,  -85.109474182,\  
+    22.882591248,  -24.646930695,    5.819342613,\  
+    49.322834015,  120.891410828,  -20.000000000 )  
 ```
 
 ---
@@ -691,7 +691,7 @@ set ray_shadow_decay_factor, 0.1
 set antialias, 2  
 ```
 
-### **Ambient occlusion (optional for deeper contrast)**
+### **Ambient occlusion (optional)**
 
 ```  
 set ray_trace_gain, 0.1  
@@ -700,23 +700,89 @@ set ray_opaque_background, off
 
 ---
 
+## **Step 5b — Advanced aesthetic tuning (optional)**
+
+### **1. Carbon monoxide (CMO) — matte graphite style**
+
+```  
+select co, resn CMO  
+show spheres, co  
+set sphere_scale, 0.25, co  
+color grey40, co  
+set specular, 0.1, co  
+set shininess, 5, co  
+set ambient, 0.5, co  
+```
+
+### **2. Heme (HEM) — ball-and-stick with atom-based colors**
+
+```  
+select heme, resn HEM  
+show sticks, heme  
+show spheres, heme  
+set stick_radius, 0.15, heme  
+set sphere_scale, 0.20, heme  
+
+color black,      heme and elem C  
+color lightblue,  heme and elem O  
+color violet,     heme and elem N  
+color orange,     heme and elem FE  
+color orange,     heme and elem P  
+```
+
+### **3. Dual-surface helices (glossy outside, matte inside)**
+
+Create duplicate surfaces:
+
+```  
+create outer_surface, 6kap  
+create inner_surface, 6kap  
+```
+
+Shrink the inner surface slightly:
+
+```  
+alter inner_surface, vdw=0.8  
+rebuild  
+```
+
+Outer surface: colored, glossy
+
+```  
+set surface_color, cyan, outer_surface  
+set specular, 1.0, outer_surface  
+set shininess, 50, outer_surface  
+set ambient, 0.2, outer_surface  
+show surface, outer_surface  
+```
+
+Inner surface: matte grey
+
+```  
+set surface_color, grey70, inner_surface  
+set specular, 0.05, inner_surface  
+set shininess, 2, inner_surface  
+set ambient, 0.5, inner_surface  
+show surface, inner_surface  
+```
+
+---
+
 ## **Step 6 — High-quality ray tracing**
 
-Ray tracing computes realistic lighting, soft shadows, and depth.
-
-### Standard publication-quality:
+Standard publication-quality:
 
 ```  
 ray 3000, 3000  
 ```
 
-### Higher resolution (recommended for cropping / multipanel figures):
+Higher resolution (recommended for cropping / multipanel figures):
 
 ```  
 ray 4000, 4000  
 ```
 
-### Quick preview render:
+Quick preview:
 
 ```  
 ray 1200, 1200  
@@ -726,27 +792,27 @@ ray 1200, 1200
 
 ## **Step 7 — Export the final figure**
 
-Save as PNG at 300 DPI:
+Save PNG at 300 DPI:
 
 ```  
 png hemoglobin_6kap.png, dpi=300  
 ```
 
-Or define width & height explicitly:
+Define exact resolution:
 
 ```  
 png hemoglobin_6kap.png, width=3000, height=3000, dpi=300  
 ```
 
-Save PyMOL session for later editing:
+Save session:
 
 ```  
 save 6kap_scene.pse  
 ```
 
----
+This workflow demonstrates how to turn a raw PDB file into a refined, publication-ready illustration of **hemoglobin with heme and CO ligands**, including advanced material and lighting effects.
 
-This workflow demonstrates how to turn a raw PDB file into a professional, publication-ready illustration of **hemoglobin with heme and CO ligands**.
+---
 
 ## PyMOL Rendering Script
 [↑ Back to top](#effective-data-visualization-in-research)
