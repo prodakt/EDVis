@@ -743,7 +743,8 @@ This produces a clean and professional effect without surfaces or duplication.
 select helices, 6kap and ss H
 
 # Outer color will be set later – this sets INNER surface:
-set cartoon_highlight_color, grey60, helices
+set cartoon_color, forest # if you want to change the color
+set cartoon_highlight_color, lightorange
 
 # Matte finish for the inner side
 set specular, 0.05, helices
@@ -752,10 +753,7 @@ set ambient, 0.5, helices
 ```
 #### 3b. Outer glossy surface (colored shell around helices)
 
-We now add a semitransparent, glossy surface for the whole protein or just helices:
-
 ``` 
-color cyan, helices
 
 # Glossy finish for the external side
 set specular, 1.0, helices
@@ -1644,7 +1642,11 @@ This workflow mirrors best practices used in structural biology, drug design, an
 
 This completes the PyMOL scripting tutorial and provides a reproducible workflow for generating publication-quality molecular graphics.
 
-
+sources:
+https://pymol.org/dokuwiki/
+https://wiki.pymol.org/
+https://mooerslab.github.io/pymolsnips/
+https://www.youtube.com/playlist?list=PLUMhYZpMLtal_Z7to3by2ATHP-cI4ma5X
 ---
 
 
