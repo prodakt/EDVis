@@ -1645,12 +1645,13 @@ This workflow mirrors best practices used in structural biology, drug design, an
 This completes the PyMOL scripting tutorial and provides a reproducible workflow for generating publication-quality molecular graphics.
 
 sources:
-https://pymol.org/dokuwiki/
-https://wiki.pymol.org/
-https://mooerslab.github.io/pymolsnips/
-https://www.youtube.com/playlist?list=PLUMhYZpMLtal_Z7to3by2ATHP-cI4ma5X
----
+- https://pymol.org/dokuwiki/
+- https://wiki.pymol.org/
+- https://mooerslab.github.io/pymolsnips/
+- https://www.youtube.com/playlist?list=PLUMhYZpMLtal_Z7to3by2ATHP-cI4ma5X
 
+
+---
 
 # 5. Software Ecosystem for Scientific Figure Preparation
 [↑ Back to top](#effective-data-visualization-in-research)
