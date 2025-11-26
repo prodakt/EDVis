@@ -732,40 +732,35 @@ color orange,     heme and elem P
 
 ### **3. Helices: colorful glossy “shell” + grey matte ribbon inside**
 
-PyMOL cannot assign different materials to the front and back side of the same cartoon helix.  
-However, we can **approximate the effect** by combining:
+PyMOL allows coloring the *two sides* of a cartoon helix separately:
+- **outer side** → controlled by standard `color`  
+- **inner side** → controlled by `cartoon_highlight_color`
 
-- a **colored, glossy surface** that wraps around the protein (outer shell)  
-- a **grey, matte cartoon helix** inside (inner ribbon)
+This produces a clean and professional effect without surfaces or duplication.
 
 #### 3a. Inner matte cartoon (helices only)
 ```
-select helices, 6kap and ss H  
-hide cartoon  
-show cartoon, helices  
-color grey70, helices  
+select helices, 6kap and ss H
 
-set specular, 0.1, helices   # low gloss  
-set shininess, 5, helices    # matte look  
-set ambient, 0.5, helices    # softer, more diffuse
+# Outer color will be set later – this sets INNER surface:
+set cartoon_highlight_color, grey60, helices
+
+# Matte finish for the inner side
+set specular, 0.05, helices
+set shininess, 2, helices
+set ambient, 0.5, helices
 ```
 #### 3b. Outer glossy surface (colored shell around helices)
 
 We now add a semitransparent, glossy surface for the whole protein or just helices:
 
 ``` 
-# Option A: surface around entire protein  
-show surface, 6kap  
-color cyan, 6kap  
+color cyan, helices
 
-# or Option B: surface only around helices  
-# show surface, helices  
-# color cyan, helices  
-
-set transparency, 0.3, 6kap   # see inner helix through the shell  
-set specular, 1.0, 6kap       # strong gloss  
-set shininess, 50, 6kap       # shiny outer shell  
-set ambient, 0.2, 6kap        # more directional light  
+# Glossy finish for the external side
+set specular, 1.0, helices
+set shininess, 50, helices
+set ambient, 0.2, helices 
 ```
 
 This creates a **visual impression** that:
