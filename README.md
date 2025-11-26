@@ -530,7 +530,7 @@ While these tools remain valuable, PyMOL is generally preferred for:
 
 Because the goal of this workshop is to teach *effective* and *reproducible* molecular visualization, we will rely primarily on **PyMOL with command-line scripting**.
 
-### 4.2 PyMOL Rendering Workflow
+## 4.2 PyMOL Rendering Workflow
 [↑ Back to top](#effective-data-visualization-in-research)
 
 
