@@ -498,13 +498,13 @@ PyMOL is especially well suited for:
 - easily saving and re-running scripts to generate identical images  
 
 A major strength of PyMOL is that **every action accessible through the graphical interface can also be executed using typed commands**, such as:
-'''
-fetch 1crn
+```
+fetch 1kap
 show cartoon
-color cyan, chain A
+color red, chain A
 ray 3000, 3000
 png output.png, dpi=300
-'''
+```
 
 
 This allows complete reproducibility and automated image generation — an essential aspect of modern scientific communication.
@@ -548,7 +548,7 @@ Using the PDB (recommended for live demos):
 
 
 ```  
-fetch 1crn, async=0  
+fetch 1kap, async=0  
 ```  
 
 From a local file:
@@ -591,8 +591,8 @@ Use biologically relevant color schemes:
 By chain:
 
 ``` 
-color cyan, chain A  
-color salmon, chain B  
+color red, chain A  
+color green, chain B  
 ```
 
 By secondary structure:
@@ -622,12 +622,13 @@ White background is recommended for journals.
 Rotate and zoom using the mouse, then store the view:
 
 ```  
-set_view (  
-    0.342, 0.678, 0.650,  
-    -0.939, 0.288, 0.189,  
-    -0.006, -0.676, 0.737,  
-    0.000, 0.000, -50.00  
-)  
+set_view (\
+     0.889923871,    0.115859874,    0.441145182,\
+     0.284228146,   -0.897309899,   -0.337711543,\
+     0.356717050,    0.425923288,   -0.831469476,\
+     0.000000000,    0.000000000, -169.119216919,\
+    23.661718369,  -19.782043457,   11.306533813,\
+   133.334884644,  204.903549194,  -20.000000000 )
 ```
 
 (Example view matrix — PyMOL generates this automatically if you use "get_view")
