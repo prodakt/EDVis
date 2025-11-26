@@ -707,7 +707,7 @@ set ray_opaque_background, off
 ```  
 select co, resn CMO  
 show spheres, co  
-set sphere_scale, 0.25, co  
+set sphere_scale, 0.6, co  
 color grey40, co  
 set specular, 0.1, co  
 set shininess, 5, co  
@@ -730,41 +730,61 @@ color orange,     heme and elem FE
 color orange,     heme and elem P  
 ```
 
-### **3. Dual-surface helices (glossy outside, matte inside)**
+### **3. Helices: colorful glossy “shell” + grey matte ribbon inside**
 
-Create duplicate surfaces:
+PyMOL cannot assign different materials to the front and back side of the same cartoon helix.  
+However, we can **approximate the effect** by combining:
 
-```  
-create outer_surface, 6kap  
-create inner_surface, 6kap  
+- a **colored, glossy surface** that wraps around the protein (outer shell)  
+- a **grey, matte cartoon helix** inside (inner ribbon)
+
+#### 3a. Inner matte cartoon (helices only)
+```
+select helices, 6kap and ss H  
+hide cartoon  
+show cartoon, helices  
+color grey70, helices  
+
+set specular, 0.1, helices   # low gloss  
+set shininess, 5, helices    # matte look  
+set ambient, 0.5, helices    # softer, more diffuse
+```
+#### 3b. Outer glossy surface (colored shell around helices)
+
+We now add a semitransparent, glossy surface for the whole protein or just helices:
+
+``` 
+# Option A: surface around entire protein  
+show surface, 6kap  
+color cyan, 6kap  
+
+# or Option B: surface only around helices  
+# show surface, helices  
+# color cyan, helices  
+
+set transparency, 0.3, 6kap   # see inner helix through the shell  
+set specular, 1.0, 6kap       # strong gloss  
+set shininess, 50, 6kap       # shiny outer shell  
+set ambient, 0.2, 6kap        # more directional light  
 ```
 
-Shrink the inner surface slightly:
+This creates a **visual impression** that:
+- the **outer side** is colorful and glossy (surface),  
+- the **inner side** (inside the shell) is grey and matte (cartoon helices).
 
-```  
-alter inner_surface, vdw=0.8  
-rebuild  
+---
+
+## **4. Recommended rendering after aesthetic adjustments**
+
+``` 
+set antialias, 2  
+set ray_shadows, 1  
+set ray_shadow_decay_factor, 0.1  
+ray 3500, 3500  
+png hemoglobin_6kap_advanced.png, dpi=300  
 ```
 
-Outer surface: colored, glossy
 
-```  
-set surface_color, cyan, outer_surface  
-set specular, 1.0, outer_surface  
-set shininess, 50, outer_surface  
-set ambient, 0.2, outer_surface  
-show surface, outer_surface  
-```
-
-Inner surface: matte grey
-
-```  
-set surface_color, grey70, inner_surface  
-set specular, 0.05, inner_surface  
-set shininess, 2, inner_surface  
-set ambient, 0.5, inner_surface  
-show surface, inner_surface  
-```
 
 ---
 
