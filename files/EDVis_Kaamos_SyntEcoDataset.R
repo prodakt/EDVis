@@ -173,7 +173,7 @@ str(eco_measurements)
 summary(eco_measurements)
 
 
-## Optional: quick PCA check (for you, not for students yet) -----------------
+## Optional: quick PCA check -----------------
 
 # Only numeric columns:
 num_cols <- sapply(eco_measurements, is.numeric)
@@ -182,7 +182,6 @@ eco_numeric <- eco_measurements[, num_cols]
 pca <- prcomp(scale(eco_numeric), center = TRUE, scale. = TRUE)
 
 # Quick diagnostic plot: PC1 vs PC2 colored by habitat / site
-# (You can later turn this into a ggplot example in the tutorial)
 plot(
   pca$x[,1], pca$x[,2],
   col = eco_measurements$habitat_type,
@@ -196,3 +195,4 @@ legend("topright", legend = levels(eco_measurements$habitat_type),
 ## Save to CSV ---------------------------------------------------------------
 
 write.csv(eco_measurements, file = "eco_measurements.csv", row.names = FALSE)
+
