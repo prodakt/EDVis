@@ -1860,7 +1860,11 @@ These tools handle:
 Together, these three layers represent a complete and flexible ecosystem spanning the full workflow from raw biological data to submission-ready scientific figures.
 
 
-=================================================================================================================================================================================
+
+
+---
+<!--================================================================================================================================================================================= -->
+---
 
 # 6. Data Visualization in R
 [↑ Back to top](#effective-data-visualization-in-research)
@@ -1901,6 +1905,8 @@ A synthetic ecological dataset with **1080 rows and 16 columns**, representing m
 
 ### **4. `eco_measurements.xlsx`**
 Spreadsheet version of the dataset—for inspection, validation, or manual exploration outside R.
+
+![eco_measurements table](files/EcoMeasurements_tab.png)
 
 ---
 
@@ -1996,6 +2002,9 @@ Derived from height and soil moisture with random variation.
   - linear and nonlinear relationships  
   - clear PCA clustering  
   - multiple dimensions for scatterplots (color, shape, size, facets, labels)
+
+![eco_measurements pca](files/PCA_general.png)
+
 
 This dataset provides excellent flexibility for teaching scientific visualization.
 
