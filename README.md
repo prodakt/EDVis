@@ -2279,18 +2279,351 @@ Colors represent habitat type.
 
 ---
 
-
 # 6.3 Graphic Devices in R (PNG, TIFF, PDF, SVG)
 [↑ Back to top](#effective-data-visualization-in-research)
 
-This section explains how R handles graphical devices and how to export publication-ready figures:
-- dimensions (inches, cm, mm),
-- DPI resolution (e.g., 300 DPI for journals),
-- raster vs vector outputs,
-- TIFF with LZW compression,
-- PDF and SVG for scalable graphics.
+R uses a system of **graphic devices** to control how figures are displayed, stored, or exported.  
+A graphic device is simply a “drawing surface” — it can be your computer screen or a file on disk.
 
-<< content to be added >>
+Understanding graphic devices is essential for creating **publication-ready figures**, especially when journals require specific file formats, dimensions, and DPI.
+
+---
+
+## 6.3.1 What is a graphic device in R?
+
+A *graphic device* determines:
+- **where** the graphic is drawn (screen, PNG file, PDF file…)
+- **how** it is encoded (raster, vector)
+- **what parameters** it uses (resolution, width, height, color model)
+
+In R, opening a device looks like this:
+
+```  
+png("figure.png")     # open a PNG device  
+plot(x, y)            # draw on it  
+dev.off()             # close the device  
+```
+
+Nothing is saved until you call **`dev.off()`**.
+
+---
+
+## 6.3.2 Raster vs Vector Graphics
+
+Before choosing a device, you need to know the difference between raster and vector formats.
+
+### **Raster (pixel-based)**  
+Formats: **PNG, TIFF, JPG**  
+- consist of individual pixels  
+- resolution-dependent  
+- excellent for: photos, heatmaps, surfaces, ray-traced PyMOL renders  
+- poor for scaling (can become blurry)
+
+### **Vector (geometry-based)**  
+Formats: **PDF, SVG**  
+- consist of lines, shapes, and text  
+- infinitely scalable  
+- excellent for: scatterplots, boxplots, line plots, ggplot2 figures  
+- poor for large raster layers (e.g., images embedded inside plots)
+
+---
+
+## 6.3.3 DPI: Dots Per Inch
+
+Journals usually require:
+
+- **300 DPI** for standard figures  
+- **600 DPI** for line art  
+- **1200 DPI** for bitmap line art (rare)
+
+Raster devices (PNG, TIFF) allow you to specify DPI:
+
+```  
+png("figure.png", width = 2000, height = 1500, res = 300)
+```
+
+Vector formats **do not have DPI**, because they scale infinitely.
+
+---
+
+## 6.3.4 Dimensions: Inches, cm, mm
+
+R uses **inches** internally for device sizes.
+
+To convert:
+- 1 inch = 2.54 cm  
+- 1 cm = 0.3937 inch  
+- 1 mm = 0.03937 inch  
+
+If a journal asks for a figure **7 inches wide**, you can specify:
+
+
+```  
+png("figure.png", width = 7, height = 5, units = "in", res = 300)
+```
+
+This ensures consistent physical size in the final publication.
+
+---
+
+## 6.3.5 PNG — Best for screens, presentations, GitHub, and web
+
+PNG is a widely supported raster format.  
+Use it for:
+- quick exploratory graphics  
+- figures inserted into README files  
+- any screen-based visualization
+
+### Example export
+
+
+```  
+png("fig_example_png.png", width = 2000, height = 1600, res = 300)
+plot(eco$height_cm, eco$leaf_area_cm2,
+     main = "Height vs Leaf Area",
+     xlab = "Height (cm)", ylab = "Leaf Area (cm²)")
+dev.off()
+```
+
+---
+
+## 6.3.6 TIFF — Required by many journals
+
+TIFF is the **most common submission format** for scientific journals.  
+Supports **LZW compression**, which preserves quality and reduces file size.
+
+### Example (TIFF with LZW compression)
+
+
+```  
+tiff("fig_example_tiff.tiff",
+     width = 2000, height = 1600,
+     res = 300, compression = "lzw")
+
+boxplot(height_cm ~ site, data = eco,
+        main = "Plant Height by Site",
+        xlab = "Site", ylab = "Height (cm)")
+
+dev.off()
+```
+
+TIFF is ideal for:
+- high-quality raster export  
+- microscopy images  
+- PyMOL ray-traced renders  
+- figures combining raster + annotations
+
+---
+
+## 6.3.7 PDF — Best for vector scientific figures
+
+PDF is **vector-based**, so it is excellent for:
+- ggplot2 figures  
+- line plots, boxplots, scatterplots  
+- figures that need perfect scaling
+
+### Example export
+
+
+```  
+pdf("fig_example_pdf.pdf", width = 7, height = 5)
+plot(eco$soil_moisture, eco$light_intensity,
+     main = "Soil Moisture vs Light Intensity",
+     xlab = "Soil Moisture", ylab = "Light Intensity")
+dev.off()
+```
+
+PDF files scale perfectly in manuscripts prepared in LaTeX, Word, or Illustrator.
+
+---
+
+## 6.3.8 SVG — For web, HTML, JavaScript interactivity
+
+SVG is a **vector format** ideal for:
+- web pages  
+- interactive figures  
+- HTML-based documents (RMarkdown, Quarto)
+
+### Example export
+
+```  
+svg("fig_example_svg.svg", width = 7, height = 5)
+hist(eco$nitrogen_ppm,
+     main = "Distribution of Soil Nitrogen",
+     xlab = "Nitrogen (ppm)")
+dev.off()
+```
+
+SVGs remain sharp on all display sizes.
+
+---
+
+## 6.3.9 Which device should you use?
+
+| Use case | Recommended device | Notes |
+|----------|--------------------|-------|
+| High-quality figure for journal | **TIFF (300 DPI)** | Use LZW compression |
+| Plot for screen / GitHub README | **PNG** | Most compatible |
+| Vector figure for manuscript | **PDF** | Best for ggplot2 |
+| Web-based figure | **SVG** | Fully scalable |
+| PyMOL ray-traced render | **TIFF or PNG** | Maintain high resolution |
+
+---
+
+## 6.3.10 Practical examples from this workshop
+
+Below are examples showing how to export real figures used in this chapter.
+
+### Exporting the height vs leaf area scatterplot (from section 6.2)
+
+```  
+png("files/fig6_3_scatter_height_leafarea.png",
+    width = 2400, height = 2000, res = 300)
+
+plot(eco$height_cm, eco$leaf_area_cm2,
+     col = "darkblue", pch = 16,
+     main = "Height vs Leaf Area",
+     xlab = "Height (cm)",
+     ylab = "Leaf Area (cm²)")
+
+dev.off()
+```
+
+### Exporting the boxplot of chlorophyll content by habitat type
+
+```  
+tiff("files/fig6_3_chlorophyll_boxplot.tiff",
+     width = 2400, height = 2000,
+     res = 300, compression = "lzw")
+
+boxplot(chlorophyll_content ~ habitat_type,
+        data = eco,
+        col = c("darkolivegreen3", "goldenrod1", "skyblue2"),
+        main = "Chlorophyll Content by Habitat Type",
+        xlab = "Habitat Type",
+        ylab = "Chlorophyll Content (SPAD units)")
+
+dev.off()
+```
+
+These files can now be inserted directly into the README or submitted to scientific journals.
+
+
+## 6.3.11 Example: IJMS-compliant PCA figure (TIFF)
+[↑ Back to top](#effective-data-visualization-in-research)
+
+Many molecular biology journals, including the *International Journal of Molecular Sciences (IJMS)*, require figures to be submitted as high-quality image files.  
+According to the IJMS “Instructions for Authors” (Figures and Original Images Requirements, see  
+https://www.mdpi.com/journal/ijms/instructions):
+
+- minimum image size: **≥ 1000 px width/height or ≥ 300 dpi**,  
+- preferred formats: **TIFF, JPEG, EPS, PDF** (for figures in general),  
+- recommended color: **RGB, 8-bit per channel**,  
+- original, uncropped image data (e.g., gels, blots, microscopy) may be required as separate files.
+
+Below we demonstrate how to generate a **PCA plot** from the `eco_measurements` dataset and export it as a **TIFF file** that satisfies these requirements.
+
+### Step 1 — PCA on the ecological dataset
+
+We first run PCA on the numeric variables, then combine scores with the categorical grouping variables (`habitat_type`, `site`).
+
+```  
+# Load dataset (from local file or GitHub raw URL)
+# eco <- read.csv("files/eco_measurements.csv", stringsAsFactors = FALSE)
+# or:
+# eco <- read.csv(
+#   "https://raw.githubusercontent.com/prodakt/EDVis/main/files/eco_measurements.csv",
+#   stringsAsFactors = FALSE
+# )
+
+eco$site         <- factor(eco$site)
+eco$habitat_type <- factor(eco$habitat_type)
+
+# Select only numeric columns for PCA
+num_cols <- sapply(eco, is.numeric)
+eco_numeric <- eco[, num_cols]
+
+# Run PCA with centering and scaling
+pca <- prcomp(eco_numeric, center = TRUE, scale. = TRUE)
+
+# Percentage of variance explained
+var_exp <- (pca$sdev^2) / sum(pca$sdev^2)
+pc1_var <- round(var_exp[1] * 100, 1)
+pc2_var <- round(var_exp[2] * 100, 1)
+
+# Build a data frame with PCA scores and grouping variables
+pca_scores <- as.data.frame(pca$x)
+pca_scores$habitat_type <- eco$habitat_type
+pca_scores$site         <- eco$site
+```
+
+### Step 2 — PCA visualization with ggplot2
+
+We visualize **PC1 vs PC2**, using:
+
+- color = `habitat_type` (forest/grassland/wetland),
+- shape = `site` (A/B/C/D).
+
+```  
+library(ggplot2)
+
+p_pca <- ggplot(
+  pca_scores,
+  aes(x = PC1, y = PC2,
+      color = habitat_type,
+      shape = site)
+) +
+  geom_point(alpha = 0.7, size = 2) +
+  labs(
+    title = "PCA of eco_measurements dataset",
+    x = paste0("PC1 (", pc1_var, "%)"),
+    y = paste0("PC2 (", pc2_var, "%)"),
+    color = "Habitat type",
+    shape = "Site"
+  ) +
+  theme_bw(base_size = 12) +
+  theme(
+    plot.title      = element_text(hjust = 0.5),
+    legend.position = "right",
+    panel.grid      = element_line(size = 0.2)
+  )
+
+# Preview on screen (optional)
+# print(p_pca)
+```
+
+### Step 3 — Export as IJMS-style TIFF (RGB, 300 dpi)
+
+Below we export the PCA figure as a **TIFF file with 300 dpi and LZW compression**.  
+We use **width/height in millimeters**, which is convenient for matching journal figure sizes.
+
+Here we choose **180 mm × 180 mm** as an example (a typical two-column figure size).
+
+```  
+# Export PCA plot as TIFF for IJMS
+tiff(
+  filename    = "files/fig_IJMS_PCA_eco.tiff",
+  width       = 180,     # width in mm
+  height      = 180,     # height in mm
+  units       = "mm",
+  res         = 300,     # 300 dpi, journal standard
+  compression = "lzw"    # lossless compression
+)
+
+print(p_pca)
+
+dev.off()
+```
+
+The resulting file `fig_IJMS_PCA_eco.tiff`:
+
+- is a **TIFF** image,  
+- has **300 dpi** resolution,  
+- uses **RGB** color (default for R graphical devices),  
+- is large enough in pixels to meet IJMS technical requirements.
+
+Such a figure can be directly uploaded during manuscript submission or included in a figure ZIP archive prepared for the journal.
+
 
 ---
 
