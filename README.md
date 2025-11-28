@@ -3007,7 +3007,21 @@ plot_ly(
 )
 ```
 
+For static documentation (e.g., this README), we also include a PNG snapshot of this interactive plot:
+
+![Figure 6.5.3A: Interactive 3D scatterplot (snapshot)](files/fig6_5_3A_height_leafarea_plotly3d.png)  
+
+**Figure 6.5.3A.** Snapshot of an interactive 3D Plotly scatterplot of height (`height_cm`), leaf area (`leaf_area_cm2`), and soil moisture (`soil_moisture`). Points are colored by `habitat_type`.
+
+
 > Note: This Plotly figure is interactive and not exported as a PNG in this repository.
+> But you can follow the istruction to save the image:
+```
+# 1. Print p_6_5_3_plotly3d in RStudio or browser.
+# 2. Take a screenshot.
+# 3. Crop the image.
+# 4. Save it as:filename.png
+```
 
 ---
 
