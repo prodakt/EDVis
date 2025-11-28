@@ -489,8 +489,14 @@ Source: https://opendatascience.com/3-things-your-boss-wont-care-about-in-your-d
 
 PyMOL is one of the most widely used tools in structural biology for generating high-quality molecular graphics. It is free (Open-Source PyMOL), runs on all major platforms, and supports both graphical operations and a powerful command-line interface. This makes it ideal for reproducible scientific workflows, where figures can be generated programmatically using scripts instead of manual point-and-click operations.
 
-![Coverage image from PyMOL](https://onlinelibrary.wiley.com/toc/10974547/93/1)
-![Figure 4.1: Coverage image from PyMOL](files/jnr.v93.1.cover.jpg) 
+<!--
+![Figure 4.1: Coverage image from PyMOL](files/jnr.v93.1.cover.jpg)
+Source: https://onlinelibrary.wiley.com/toc/10974547/93/1
+-->
+<a href="https://onlinelibrary.wiley.com/toc/10974547/93/1">
+  <img src="files/jnr.v93.1.cover.jpg" width="300">
+</a>
+
 
 PyMOL is especially well suited for:
 - preparing publication-quality molecular renderings  
