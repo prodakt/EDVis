@@ -23,7 +23,7 @@ This 2–3 hour workshop introduces participants to the essential concepts and p
    - [PyMOL Rendering Workflow](#pymol-rendering-workflow)  
    - [PyMOL Rendering Script](#pymol-rendering-script)  
 6. [Tools for Scientific Figure Preparation](#tools-for-scientific-figure-preparation)  
-7. [Data Visualization in R](#data-visualization-in-r)  
+7. [Data Visualization in R](#6-data-visualization-in-r)  
    - [Base R Plots](#base-r-plots)  
    - [ggplot2 Fundamentals](#ggplot2-fundamentals)  
    - [Exporting Publication-Ready Figures](#exporting-publication-ready-figures)  
@@ -1859,8 +1859,216 @@ These tools handle:
 
 Together, these three layers represent a complete and flexible ecosystem spanning the full workflow from raw biological data to submission-ready scientific figures.
 
+
+=================================================================================================================================================================================
+
+# 6. Data Visualization in R
+[↑ Back to top](#effective-data-visualization-in-research)
+
+This chapter introduces practical data visualization techniques in R, using a synthetic ecological dataset created specifically for this workshop. All examples—including base R plots, ggplot2 graphics, multi-dimensional visualizations, and exporting publication-quality figures—use the same dataset to ensure consistency and reproducibility.
+
+The goal is to demonstrate:
+- how to load, explore, and visualize data,
+- how to generate clean, clear, and informative scientific graphics,
+- how to prepare publication-ready figures that follow journal standards.
+
 ---
 
+## 6.1 Input Files and Dataset Overview
+[↑ Back to top](#effective-data-visualization-in-research)
+
+The following files are required for reproducing all analyses in this chapter.  
+They are available in the `files/` directory of this repository.
+
+### **1. `EDVis_Kaamos_SyntEcoDataset.R`**
+R script that generates the synthetic ecological dataset used throughout this chapter.  
+It defines all categorical and numerical variables, introduces biologically meaningful patterns, and exports the final table as a CSV file.
+
+### **2. `EDVis_Kaamos_Rscript.R`**
+A standalone script containing all R commands covered in this workshop:
+- loading the dataset,  
+- performing exploratory visualizations,  
+- generating ggplot2 charts,  
+- exporting high-quality graphics,  
+- statistical comparisons (e.g., ANOVA),  
+- PCA and multi-dimensional plotting.
+
+Participants can run this file line-by-line during or after the workshop.
+
+### **3. `eco_measurements.csv`**
+The main input dataset for all examples.  
+A synthetic ecological dataset with **1080 rows and 16 columns**, representing measurements collected across different sites, habitat types, species, and biological replicates.
+
+### **4. `eco_measurements.xlsx`**
+Spreadsheet version of the dataset—for inspection, validation, or manual exploration outside R.
+
+---
+
+## 6.1.1 Dataset Description — Column-by-Column Explanation
+The dataset contains four categorical variables describing sampling conditions and twelve numeric variables representing biological measurements and environmental factors.  
+It is designed to be:
+- ecologically coherent,
+- statistically structured,
+- suitable for PCA clustering,
+- appropriate for multi-dimensional visualization.
+
+### **Categorical Variables (4)**
+
+#### **`site`**
+Sampling location: **A**, **B**, **C**, **D**.  
+Defines broad environmental differences such as nutrient levels and temperature.
+
+#### **`habitat_type`**
+Ecological habitat category:  
+- `forest`,  
+- `grassland`,  
+- `wetland`.  
+This variable introduces the strongest separation in PCA.
+
+#### **`species`**
+Three plant species:  
+- `species1`,  
+- `species2`,  
+- `species3`.
+
+#### **`replicate`**
+Biological replicate (1–5).  
+Demonstrates within-group biological variability.
+
+---
+
+### **Numeric Variables (12)**
+
+#### **`height_cm`**
+Plant height (cm).  
+Approximately normal distribution with site × habitat × species effects.
+
+#### **`leaf_area_cm2`**
+Correlated with height. Ideal for scatterplots and linear regression examples.
+
+#### **`biomass_g`**
+Above-ground biomass (g).  
+Nonlinear function of height plus error.
+
+#### **`chlorophyll_content`**
+Chlorophyll content (SPAD units).  
+Species- and habitat-dependent; good for ANOVA and grouping.
+
+#### **`soil_moisture`**
+Strongly driven by habitat (wetland > forest > grassland).  
+One of the key PCA-driving variables.
+
+#### **`soil_ph`**
+Soil pH (4.5–7.5).  
+Moderately site-dependent.
+
+#### **`temperature_C`**
+Air temperature during sampling.  
+Distinct means for each site.
+
+#### **`light_intensity`**
+Light intensity (μmol/m²/s).  
+Habitat-driven (grassland highest, forest lowest).
+
+#### **`nitrogen_ppm`**
+Soil nitrogen content (ppm).  
+Site × habitat effect.
+
+#### **`phosphorus_ppm`**
+Moderately correlated with nitrogen.  
+Useful for correlation plots.
+
+#### **`potassium_ppm`**
+Mostly random with mild habitat influence.  
+Good for histograms.
+
+#### **`growth_rate_cm_week`**
+Weekly growth rate.  
+Derived from height and soil moisture with random variation.
+
+---
+
+## 6.1.2 Summary of Dataset Properties
+- **1080 observations**
+- **16 variables** (4 categorical + 12 numeric)
+- Includes:
+  - group differences suitable for ANOVA  
+  - linear and nonlinear relationships  
+  - clear PCA clustering  
+  - multiple dimensions for scatterplots (color, shape, size, facets, labels)
+
+This dataset provides excellent flexibility for teaching scientific visualization.
+
+---
+
+# 6.2 Base R Plots
+[↑ Back to top](#effective-data-visualization-in-research)
+
+<< content to be added >>
+
+---
+
+# 6.3 Graphic Devices in R (PNG, TIFF, PDF, SVG)
+[↑ Back to top](#effective-data-visualization-in-research)
+
+This section explains how R handles graphical devices and how to export publication-ready figures:
+- dimensions (inches, cm, mm),
+- DPI resolution (e.g., 300 DPI for journals),
+- raster vs vector outputs,
+- TIFF with LZW compression,
+- PDF and SVG for scalable graphics.
+
+<< content to be added >>
+
+---
+
+# 6.4 ggplot2 Fundamentals
+[↑ Back to top](#effective-data-visualization-in-research)
+
+This section introduces the grammar of graphics and demonstrates common ggplot2 workflows:
+- aesthetic mappings (`aes()`),  
+- geoms (`geom_point()`, `geom_boxplot()`, `geom_histogram()`),  
+- scales,  
+- themes,  
+- color palettes,  
+- figure refinement.
+
+<< content to be added >>
+
+---
+
+# 6.5 Multi-Dimensional Scatterplots (2–7 Dimensions)
+[↑ Back to top](#effective-data-visualization-in-research)
+
+Using the `eco_measurements` dataset, this section demonstrates how to visualize multi-dimensional data:
+- 2D scatterplots (x, y),  
+- 3D via *color*,  
+- 4D via *shape*,  
+- 5D via *size*,  
+- 6D via *labels*,  
+- 7D via *facets*.
+
+<< content to be added >>
+
+---
+
+# 6.6 Exporting Publication-Ready Figures
+[↑ Back to top](#effective-data-visualization-in-research)
+
+This section demonstrates:
+- exporting ggplot2 and base R figures,
+- recommended dimensions for journals,
+- DPI considerations,
+- color spaces (RGB vs CMYK),
+- TIFF with LZW compression,
+- PDF for vector-based figures.
+
+<< content to be added >>
+
+---
+
+
+<!--
 # 6. Data Visualization in R
 [↑ Back to top](#effective-data-visualization-in-research)
 
@@ -1890,7 +2098,10 @@ Together, these three layers represent a complete and flexible ecosystem spannin
 
 << content to be added >>
 
+-->
+
 ---
+
 
 # 7. Exercises
 [↑ Back to top](#effective-data-visualization-in-research)
