@@ -2631,19 +2631,263 @@ Such a figure can be directly uploaded during manuscript submission or included 
 # 6.4 ggplot2 Fundamentals
 [↑ Back to top](#effective-data-visualization-in-research)
 
-This section introduces the grammar of graphics and demonstrates common ggplot2 workflows:
-- aesthetic mappings (`aes()`),  
-- geoms (`geom_point()`, `geom_boxplot()`, `geom_histogram()`),  
-- scales,  
-- themes,  
-- color palettes,  
-- figure refinement.
+`ggplot2` is one of the most powerful and widely used visualization libraries in R.  
+It implements the **Grammar of Graphics**, a structured system for building statistical graphics in layers.
 
-<< content to be added >>
+This section introduces:
+- aesthetic mappings (`aes()`)  
+- geometric objects (`geom_*`)  
+- scales  
+- themes  
+- color palettes  
+- layering and figure refinement  
+
+All examples below are fully reproducible using the dataset `eco_measurements`.
 
 ---
 
-# 6.5 Multi-Dimensional Scatterplots (2–7 Dimensions)
+## 6.4.1 What is the Grammar of Graphics?
+
+The **Grammar of Graphics** (Wilkinson 2005) defines a plot as a composition of:
+
+- **data** – the dataset to visualize  
+- **aesthetics** – how variables map to visual properties (x, y, color, shape, size…)  
+- **geoms** – geometric objects (points, bars, lines…)  
+- **scales** – control color, size, axes  
+- **facets** – split data into panels  
+- **themes** – control appearance (fonts, grid, background)
+
+In `ggplot2`, each plot follows the same core pattern:
+
+```
+ggplot(data, aes(...)) +
+  geom_*() +
+  scale_*() +
+  theme_*()
+```
+
+---
+
+## 6.4.2 Loading ggplot2 and the dataset
+
+```
+library(ggplot2)
+
+# Load dataset (local or GitHub raw link)
+# eco <- read.csv("files/eco_measurements.csv", stringsAsFactors = FALSE)
+# or:
+# eco <- read.csv("https://raw.githubusercontent.com/prodakt/EDVis/main/files/eco_measurements.csv")
+
+eco$site         <- factor(eco$site)
+eco$habitat_type <- factor(eco$habitat_type)
+eco$species      <- factor(eco$species)
+```
+
+---
+
+## 6.4.3 Scatterplot basics (geom_point)
+
+This example shows the relationship between **plant height** and **leaf area** using a basic scatterplot.
+
+```
+ggplot(eco, aes(x = height_cm, y = leaf_area_cm2)) +
+  geom_point()
+```
+
+This is the minimal ggplot2 syntax: data + aes + geom.
+
+---
+
+## 6.4.4 Adding color, shape, and transparency
+
+We can map categorical variables to visual aesthetics:
+
+- `color` → habitat type  
+- `shape` → site  
+- `alpha` → point transparency  
+
+```
+ggplot(eco, aes(
+  x = height_cm,
+  y = leaf_area_cm2,
+  color = habitat_type,
+  shape = site
+)) +
+  geom_point(alpha = 0.7, size = 2) +
+  labs(
+    title = "Height vs Leaf Area",
+    x = "Height (cm)",
+    y = "Leaf Area (cm²)",
+    color = "Habitat type",
+    shape = "Site"
+  ) +
+  theme_bw()
+```
+
+This already creates a much more informative multi-dimensional figure.
+
+---
+
+## 6.4.5 Histogram and density plots
+
+### Histogram of soil nitrogen
+
+```
+ggplot(eco, aes(x = nitrogen_ppm)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  labs(
+    title = "Distribution of Soil Nitrogen",
+    x = "Nitrogen (ppm)",
+    y = "Count"
+  ) +
+  theme_bw()
+```
+
+### Density plot
+
+``` 
+ggplot(eco, aes(x = nitrogen_ppm, fill = habitat_type)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Density of Soil Nitrogen by Habitat Type",
+    x = "Nitrogen (ppm)",
+    y = "Density"
+  ) +
+  theme_bw()
+```
+
+---
+
+## 6.4.6 Boxplots
+
+Boxplots are ideal for comparing distributions across groups.
+
+### Boxplot of chlorophyll content by habitat type
+
+``` 
+ggplot(eco, aes(x = habitat_type, y = chlorophyll_content, fill = habitat_type)) +
+  geom_boxplot() +
+  labs(
+    title = "Chlorophyll Content by Habitat Type",
+    x = "Habitat type",
+    y = "Chlorophyll content (SPAD units)"
+  ) +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+---
+
+## 6.4.7 Faceting (small multiples)
+
+Facets split data into multiple subplots.
+
+Example: height vs leaf area faceted by species
+
+```
+ggplot(eco, aes(x = height_cm, y = leaf_area_cm2, color = habitat_type)) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(~ species) +
+  labs(
+    title = "Height vs Leaf Area, Faceted by Species",
+    x = "Height (cm)",
+    y = "Leaf Area (cm²)"
+  ) +
+  theme_bw()
+```
+
+---
+
+## 6.4.8 Using scales (colors, shapes, limits, transformations)
+
+### Manual color scales
+
+``` 
+ggplot(eco, aes(x = height_cm, y = biomass_g, color = habitat_type)) +
+  geom_point(alpha = 0.7) +
+  scale_color_manual(
+    values = c(
+      forest    = "darkgreen",
+      grassland = "goldenrod2",
+      wetland   = "steelblue"
+    )
+  ) +
+  theme_bw()
+```
+
+### Log transformations
+
+``` 
+ggplot(eco, aes(x = height_cm, y = biomass_g)) +
+  geom_point(alpha = 0.6) +
+  scale_y_log10() +
+  labs(
+    y = "Biomass (g, log10 scale)"
+  ) +
+  theme_bw()
+```
+
+---
+
+## 6.4.9 Themes: refining figure appearance
+
+`ggplot2` themes allow full control over visual style.
+
+### Example: theme_classic
+
+```  
+ggplot(eco, aes(x = height_cm, y = biomass_g, color = habitat_type)) +
+  geom_point() +
+  theme_classic(base_size = 14)
+```
+
+### Example: theme_minimal
+
+``` 
+ggplot(eco, aes(x = soil_ph, fill = habitat_type)) +
+  geom_histogram(position = "identity", alpha = 0.5, bins = 30) +
+  theme_minimal(base_size = 14)
+```
+
+---
+
+## 6.4.10 Multi-layer plotting
+
+Layers can be stacked to build complex graphics.
+
+Example: adding a smooth trend line:
+
+```  
+ggplot(eco, aes(x = height_cm, y = biomass_g, color = habitat_type)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  theme_bw()
+```
+
+---
+
+## 6.4.11 Summary of ggplot2 essentials
+
+**Core components:**
+- `ggplot(data, aes(...))` — define dataset and aesthetics  
+- `geom_*()` — choose geometric object  
+- `facet_*()` — split into subplots  
+- `scale_*()` — manual control of colors, shapes, axes  
+- `theme_*()` — visual appearance  
+- `labs()` — titles, labels, legends  
+
+**Advantages of ggplot2:**
+- modular, layered system  
+- reproducible and scriptable  
+- high-quality scientific figures  
+- easily exported to PNG, TIFF, PDF, SVG (see Section 6.3)
+
+This foundation will be expanded in the next section, where we build **complex multi-dimensional scatterplots**.
+
+
+---
+
+# 6.5 Multi-Dimensional Scatterplots
 [↑ Back to top](#effective-data-visualization-in-research)
 
 Using the `eco_measurements` dataset, this section demonstrates how to visualize multi-dimensional data:
