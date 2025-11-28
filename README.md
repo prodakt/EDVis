@@ -2232,7 +2232,7 @@ dev.off()
 
 ---
 
-## 6.2.7 Pairwise relationships between selected variables
+## 6.2.6 Pairwise relationships between selected variables
 
 To obtain a quick overview of **pairwise relationships** between several numeric variables, we can use `pairs()` on a subset of columns (e.g., height, biomass, soil moisture, light intensity).
 
@@ -2256,6 +2256,17 @@ dev.off()
 ![Figure 6.2.6: Pairwise relationships between selected variables](files/fig6_2_6_pairs_selected_numeric.png)  
 
 **Figure 6.2.6.** Pairwise scatterplot matrix (`pairs()`) for a subset of numeric variables (`height_cm`, `biomass_g`, `soil_moisture`, `light_intensity`). This overview helps identify correlations, nonlinear patterns, and potential outliers before more advanced modeling.
+
+
+![Figure 6.2.6: Pairwise relationships](files/fig6_2_6_pairs_selected_numeric_pro.png)
+
+**Figure 6.2.6.** Pairwise plot matrix for four numeric variables  
+(`height_cm`, `biomass_g`, `soil_moisture`, `light_intensity`).  
+Diagonal panels show histograms, upper panels show Pearson correlations, and lower panels show colored scatterplots.  
+Colors represent habitat type.
+
+![Legend for Figure 6.2.6](files/fig6_2_6_legend.png)
+
 
 ---
 
