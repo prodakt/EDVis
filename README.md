@@ -2886,19 +2886,232 @@ This foundation will be expanded in the next section, where we build **complex m
 
 
 ---
-
 # 6.5 Multi-Dimensional Scatterplots
 [↑ Back to top](#effective-data-visualization-in-research)
 
-Using the `eco_measurements` dataset, this section demonstrates how to visualize multi-dimensional data:
-- 2D scatterplots (x, y),  
-- 3D via *color*,  
-- 4D via *shape*,  
-- 5D via *size*,  
-- 6D via *labels*,  
-- 7D via *facets*.
+Scientific datasets frequently contain many variables, and visualizing more than two dimensions is a common challenge.  
+Using the `eco_measurements` dataset, this section demonstrates how to represent:
 
-<< content to be added >>
+- 1D distributions  
+- 2D scatterplots  
+- 3D relationships (color or 3D plot)  
+- 4D (adding shape)  
+- 5D (adding size)  
+
+Further dimensions (labels and facets) will be introduced later in the exercises.
+
+---
+
+## 6.5.1 One-dimensional visualization (1D)
+[↑ Back to top](#effective-data-visualization-in-research)
+
+A **one-dimensional plot** represents a single variable.  
+Typical 1D visualizations include:
+
+- histograms  
+- density plots  
+- dot plots / stripcharts  
+- violin plots  
+- boxplots  
+
+Below are examples using `height_cm`.
+
+### Histogram (1D)
+
+```  
+ggplot(eco, aes(x = height_cm)) +
+  geom_histogram(bins = 30, fill = "darkseagreen3", color = "white") +
+  labs(
+    title = "Distribution of Plant Height",
+    x = "Height (cm)",
+    y = "Count"
+  ) +
+  theme_bw()
+```
+
+![Figure 6.5.1A: Histogram of plant height](files/fig6_5_1_height_hist.png)  
+
+**Figure 6.5.1A.** Histogram of plant height (`height_cm`) for all observations in the `eco_measurements` dataset. The distribution is roughly normal with moderate spread, reflecting variability across sites, habitats, and species.
+
+---
+
+### Stripchart (individual points)
+
+```  
+ggplot(eco, aes(x = 1, y = height_cm)) +
+  geom_jitter(width = 0.15, alpha = 0.5, color = "darkgreen") +
+  labs(
+    title = "Individual Heights (1D Scatter)",
+    x = "",
+    y = "Height (cm)"
+  ) +
+  theme_bw() +
+  theme(axis.text.x = element_blank())
+```
+
+![Figure 6.5.1B: 1D scatter of plant height](files/fig6_5_1_height_strip.png)  
+
+**Figure 6.5.1B.** One-dimensional scatterplot (stripchart) of `height_cm`. Each point represents an individual plant. This view highlights outliers and local density patterns that may be less obvious in a histogram.
+
+---
+
+## 6.5.2 Two-dimensional scatterplot (2D)
+[↑ Back to top](#effective-data-visualization-in-research)
+
+A 2D scatterplot shows the relationship between two continuous variables.
+
+Example: **height vs leaf area**
+
+```  
+ggplot(eco, aes(x = height_cm, y = leaf_area_cm2)) +
+  geom_point(alpha = 0.7, color = "steelblue") +
+  labs(
+    title = "2D Scatterplot: Height vs Leaf Area",
+    x = "Height (cm)",
+    y = "Leaf Area (cm²)"
+  ) +
+  theme_bw()
+```
+
+![Figure 6.5.2: 2D scatterplot of height vs leaf area](files/fig6_5_2_height_leafarea_2d.png)  
+
+**Figure 6.5.2.** Two-dimensional scatterplot of plant height (`height_cm`) versus leaf area (`leaf_area_cm2`). The positive trend reflects the expected relationship between size and leaf surface, with substantial biological variability.
+
+---
+
+## 6.5.3 Three-dimensional visualization (3D)
+[↑ Back to top](#effective-data-visualization-in-research)
+
+Three dimensions can be represented either as a true 3D plot or by encoding the third variable in color.
+
+### 6.5.3A Interactive 3D scatterplot (Plotly)
+
+Here the **third dimension = soil_moisture** (`soil_moisture`).  
+This example is **interactive** (rotation, zoom) and is best viewed in an R session or notebook.
+
+```  
+library(plotly)
+
+plot_ly(
+  eco,
+  x     = ~height_cm,
+  y     = ~leaf_area_cm2,
+  z     = ~soil_moisture,
+  color = ~habitat_type,
+  colors = c("forest" = "darkgreen",
+             "grassland" = "goldenrod2",
+             "wetland" = "steelblue"),
+  type   = "scatter3d",
+  mode   = "markers",
+  marker = list(size = 3, opacity = 0.7)
+)
+```
+
+> Note: This Plotly figure is interactive and not exported as a PNG in this repository.
+
+---
+
+### 6.5.3B “3D” encoded by color (pseudo-3D)
+
+The third dimension (habitat type) is encoded using **color** instead of a z-axis coordinate.
+
+```  
+ggplot(eco, aes(
+  x     = height_cm,
+  y     = leaf_area_cm2,
+  color = habitat_type
+)) +
+  geom_point(alpha = 0.7) +
+  labs(
+    title = "Pseudo-3D Scatterplot (Third Dimension = Color)",
+    x = "Height (cm)",
+    y = "Leaf Area (cm²)",
+    color = "Habitat type"
+  ) +
+  theme_bw()
+```
+
+![Figure 6.5.3: 3D encoded by color](files/fig6_5_3_height_leafarea_color3d.png)  
+
+**Figure 6.5.3.** “Pseudo-3D” scatterplot, where the third dimension is encoded as color. Height (`height_cm`) and leaf area (`leaf_area_cm2`) define the 2D plane, while `habitat_type` is mapped to point color, revealing habitat-specific clusters.
+
+---
+
+## 6.5.4 Four-dimensional visualization (4D)
+[↑ Back to top](#effective-data-visualization-in-research)
+
+We now add **shape** as a fourth dimension.
+
+- x = height  
+- y = leaf area  
+- color = habitat type (dimension 3)  
+- shape = site (dimension 4)
+
+```  
+ggplot(eco, aes(
+  x     = height_cm,
+  y     = leaf_area_cm2,
+  color = habitat_type,
+  shape = site
+)) +
+  geom_point(size = 2, alpha = 0.7) +
+  labs(
+    title = "4D Scatterplot: Adding Shape",
+    x = "Height (cm)",
+    y = "Leaf Area (cm²)",
+    color = "Habitat type",
+    shape = "Site"
+  ) +
+  theme_bw()
+```
+
+![Figure 6.5.4: 4D scatterplot with color and shape](files/fig6_5_4_height_leafarea_4d.png)  
+
+**Figure 6.5.4.** Four-dimensional scatterplot. Height (`height_cm`) and leaf area (`leaf_area_cm2`) define the 2D space, `habitat_type` is encoded by color, and `site` is encoded by point shape. This allows simultaneous inspection of habitat and site differences in the same figure.
+
+---
+
+## 6.5.5 Five-dimensional visualization (5D)
+[↑ Back to top](#effective-data-visualization-in-research)
+
+We add **size** as a fifth dimension.
+
+Using:
+
+- x = height  
+- y = leaf area  
+- color = habitat type  
+- shape = site  
+- size = biomass (`biomass_g`)  
+
+```  
+ggplot(eco, aes(
+  x     = height_cm,
+  y     = leaf_area_cm2,
+  color = habitat_type,
+  shape = site,
+  size  = biomass_g
+)) +
+  geom_point(alpha = 0.7) +
+  labs(
+    title = "5D Scatterplot: Adding Size",
+    x = "Height (cm)",
+    y = "Leaf Area (cm²)",
+    color = "Habitat type",
+    shape = "Site",
+    size  = "Biomass (g)"
+  ) +
+  theme_bw() +
+  scale_size_continuous(range = c(1.5, 6))
+```
+
+![Figure 6.5.5: 5D scatterplot with color, shape, and size](files/fig6_5_5_height_leafarea_5d.png)  
+
+**Figure 6.5.5.** Five-dimensional scatterplot combining position (height and leaf area), color (habitat type), shape (site), and point size (biomass in grams). This single figure encodes substantial ecological information while remaining interpretable.
+
+
+At this point we have reached 5 dimensions in a single plot.  
+Additional dimensions (labels and facets) will be implemented in the exercise section as an advanced task.
 
 ---
 
