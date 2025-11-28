@@ -2585,8 +2585,9 @@ p_pca <- ggplot(
   theme(
     plot.title      = element_text(hjust = 0.5),
     legend.position = "right",
-    panel.grid      = element_line(size = 0.2)
+    panel.grid      = element_line(linewidth = 0.2)  # FIXED
   )
+
 
 # Preview on screen (optional)
 # print(p_pca)
