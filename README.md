@@ -12,23 +12,67 @@ This 2–3 hour workshop introduces participants to the essential concepts and p
 # Table of Contents
 
 ### Main Sections
-1. [Introduction](#introduction)
-   - [Pixels, PPI, DPI](#pixels-ppi-dpi)  
-   - [Image Resolution](#image-resolution)  
-   - [RGB vs CMYK](#rgb-vs-cmyk)  
-   - [Raster vs Vector Graphics](#raster-vs-vector-graphics)  
-3. [Minimum Hardware and Software Requirements](#2-minimum-hardware-and-software-requirements)
-4. [Principles of Good Scientific Visualization](#principles-of-good-scientific-visualization)  
-5. [Molecular Graphics in PyMOL](#molecular-graphics-in-pymol)  
-   - [PyMOL Rendering Workflow](#pymol-rendering-workflow)  
-   - [PyMOL Rendering Script](#pymol-rendering-script)  
-6. [Tools for Scientific Figure Preparation](#tools-for-scientific-figure-preparation)  
-7. [Data Visualization in R](#6-data-visualization-in-r)  
-   - [Base R Plots](#base-r-plots)  
-   - [ggplot2 Fundamentals](#ggplot2-fundamentals)  
-   - [Exporting Publication-Ready Figures](#exporting-publication-ready-figures)  
-   - [Scatterplot: 2–7 Dimensions](#scatterplot-27-dimensions)  
-8. [Exercises](#exercises)
+# Table of Contents
+
+## 1. Workshop Overview
+- [1.1 Workshop Title & Location](#11-workshop-title--location)
+- [1.2 Summary](#12-summary)
+- [1.3 About This Repository](#13-about-this-repository)
+
+## 2. Minimum Software Requirements
+- [2.1 Required Tools](#21-required-tools)
+- [2.2 Optional / Recommended Tools](#22-optional--recommended-tools)
+
+## 3. Definitions
+- [3.1 Computer Graphics](#31-computer-graphics)
+- [3.2 Molecular Graphics](#32-molecular-graphics)
+- [3.3 Visualization](#33-visualization)
+- [3.4 Pixel & Color Depth](#34-pixel--color-depth)
+- [3.5 Image Resolution & Graphic Size](#35-image-resolution--graphic-size)
+- [3.6 Color Spaces](#36-color-spaces)
+- [3.7 Raster vs Vector Graphics](#37-raster-vs-vector-graphics)
+- [3.8 Rendering vs Ray Tracing](#38-rendering-vs-ray-tracing)
+
+## 4. Molecular Graphics in PyMOL
+- [4.1 Introduction to Molecular Visualization Tools](#41-introduction-to-molecular-visualization-tools)
+- [4.2 PyMOL Rendering Workflow](#42-pymol-rendering-workflow)
+- [4.3 Coloring Strategies](#43-coloring-strategies)
+- [4.4 Lighting, Shadows & Aesthetics](#44-lighting-shadows--aesthetics)
+- [4.5 Ray Tracing & High-Resolution Export](#45-ray-tracing--high-resolution-export)
+- [4.6 Reproducible PyMOL Scripts](#46-reproducible-pymol-scripts)
+
+## 5. Tools for Scientific Figure Preparation
+- [5.1 Data-Level Tools](#51-data-level-tools)
+- [5.2 Statistical & Analytical Tools](#52-statistical--analytical-tools)
+- [5.3 Figure Assembly & Export Tools](#53-figure-assembly--export-tools)
+
+## 6. Data Visualization in R
+- [6.1 Input Files & Dataset Description](#61-input-files--dataset-description)
+- [6.2 Base R Visualization](#62-base-r-visualization)
+- [6.2.1 Histograms](#621-histograms)
+- [6.2.2 Boxplots](#622-boxplots)
+- [6.2.3 Scatterplots](#623-scatterplots)
+- [6.2.4 Pairwise Plots](#624-pairwise-plots)
+- [6.3 Graphic Devices (PNG, TIFF, PDF)](#63-graphic-devices-png-tiff-pdf)
+- [6.4 ggplot2 Fundamentals](#64-ggplot2-fundamentals)
+- [6.5 Multi-Dimensional Scatterplots](#65-multi-dimensional-scatterplots)
+  - [6.5.1 One-Dimensional Plot](#651-one-dimensional-plot)
+  - [6.5.2 Two-Dimensional Scatterplot](#652-two-dimensional-scatterplot)
+  - [6.5.3 Three-Dimensional Visualization](#653-three-dimensional-visualization)
+  - [6.5.4 Four-Dimensional (Shape)](#654-four-dimensional-shape)
+  - [6.5.5 Five-Dimensional (Size)](#655-five-dimensional-size)
+- [6.6 Journal-Compliant Figure Export](#66-journal-compliant-figure-export)
+- [6.7 Combining Multiple Plots](#67-combining-multiple-plots)
+
+## 7. Exercises
+- [7.1 Exercise 1: Vector vs Raster](#71-exercise-1-vector-vs-raster)
+- [7.2 Exercise 2: IJMS TIFF Export](#72-exercise-2-ijms-tiff-export)
+- [7.3 Exercise 3: 9-Dimensional Visualization](#73-exercise-3-9-dimensional-visualization)
+- [7.4 Suggested Solutions](#74-suggested-solutions)
+
+## 8. Acknowledgements
+- [8.1 Credits](#81-credits)
+
 
 ---
 
