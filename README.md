@@ -9,11 +9,7 @@ This 2–3 hour workshop introduces participants to the essential concepts and p
 
 ---
 
-# Table of Contents
-
 ### Main Sections
-# Table of Contents
-
 # Table of Contents
 
 - [Summary](#summary)
@@ -105,6 +101,9 @@ This 2–3 hour workshop introduces participants to the essential concepts and p
 
 
 ---
+<!--================================================================================================================================================================================= -->
+---
+
 
 # 1. Introduction
 [↑ Back to top](#effective-data-visualization-in-research)
@@ -412,7 +411,6 @@ Source: NVIDIA (Ray Tracing Demo)
 More information:  
 https://developer.nvidia.com/discover/ray-tracing
 
-
 #### **POV-Ray**
 POV-Ray is a classic high-quality ray-tracing engine capable of producing photorealistic images using scene description code.  
 Website: https://www.povray.org/
@@ -420,6 +418,9 @@ Website: https://www.povray.org/
 
 
 ---
+<!--================================================================================================================================================================================= -->
+---
+
 
 # 2. Minimum Hardware and Software Requirements
 [↑ Back to top](#effective-data-visualization-in-research)
@@ -492,7 +493,11 @@ Website:
 https://www.povray.org/
 
 
+
 ---
+<!--================================================================================================================================================================================= -->
+---
+
 
 # 3. Principles of Good Scientific Visualization
 [↑ Back to top](#effective-data-visualization-in-research)
@@ -553,7 +558,11 @@ https://visiochart.com/blog/good-and-bad-examples-of-data-visualization
 ![](https://opendatascience.com/wp-content/uploads/2019/03/Screen-Shot-2019-03-18-at-11.26.16-AM-640x300.png)  
 Source: https://opendatascience.com/3-things-your-boss-wont-care-about-in-your-data-visualizations
 
+
 ---
+<!--================================================================================================================================================================================= -->
+---
+
 
 # 4. Molecular Graphics in PyMOL
 [↑ Back to top](#effective-data-visualization-in-research)
@@ -990,7 +999,11 @@ Meaning:
 
 PyMOL will run the script and save the PNG automatically.
 
+
 ---
+<!--================================================================================================================================================================================= -->
+---
+
 
 ## **5. Example high-quality rendering script**
 
@@ -1712,8 +1725,10 @@ You now have a publication-quality molecular figure with:
 This workflow mirrors best practices used in structural biology, drug design, and high-impact journals.
 
 
-
 ---
+<!--================================================================================================================================================================================= -->
+---
+
 
 ## **6. Why scripting matters**
 
@@ -1949,6 +1964,8 @@ Together, these three layers represent a complete and flexible ecosystem spannin
 <!--================================================================================================================================================================================= -->
 ---
 
+
+
 # 6. Data Visualization in R
 [↑ Back to top](#effective-data-visualization-in-research)
 
@@ -2134,7 +2151,7 @@ It is useful to check whether the data follow an approximately normal distributi
 ### R code to generate the figure (PNG)
 
 ```  
-png("files/fig6_2_1_height_hist.png", width = 1600, height = 1200, res = 300)
+# png("files/fig6_2_1_height_hist.png", width = 1600, height = 1200, res = 300)
 
 hist(
   eco$height_cm,
@@ -2145,7 +2162,7 @@ hist(
   border = "white"
 )
 
-dev.off()
+# dev.off()
 ```
 
 ### Markdown for the figure
@@ -2164,7 +2181,7 @@ It is designed to show site-specific differences in height, which can be later t
 ### R code to generate the figure (PNG)
 
 ```  
-png("files/fig6_2_2_height_by_site.png", width = 1600, height = 1200, res = 300)
+# png("files/fig6_2_2_height_by_site.png", width = 1600, height = 1200, res = 300)
 
 boxplot(
   height_cm ~ site,
@@ -2175,7 +2192,7 @@ boxplot(
   col   = c("lightblue", "lightgreen", "lightpink", "lightyellow")
 )
 
-dev.off()
+# dev.off()
 ```
 
 ### Markdown for the figure
@@ -2194,7 +2211,7 @@ It illustrates habitat-level differences in physiological status of the plants.
 ### R code to generate the figure (PNG)
 
 ```  
-png("files/fig6_2_3_chl_by_habitat.png", width = 1600, height = 1200, res = 300)
+# png("files/fig6_2_3_chl_by_habitat.png", width = 1600, height = 1200, res = 300)
 
 boxplot(
   chlorophyll_content ~ habitat_type,
@@ -2205,7 +2222,7 @@ boxplot(
   col   = c("darkolivegreen3", "goldenrod1", "skyblue2")
 )
 
-dev.off()
+# dev.off()
 ```
 
 ### Markdown for the figure
@@ -2227,7 +2244,7 @@ Points are colored by `site` to illustrate how the relationship may vary across 
 # Define a simple color palette for sites
 site_cols <- c(A = "red", B = "blue", C = "darkgreen", D = "purple")
 
-png("files/fig6_2_4_height_vs_leafarea.png", width = 1600, height = 1200, res = 300)
+# png("files/fig6_2_4_height_vs_leafarea.png", width = 1600, height = 1200, res = 300)
 
 plot(
   eco$height_cm,
@@ -2248,7 +2265,7 @@ legend(
   title  = "Site"
 )
 
-dev.off()
+# dev.off()
 ```
 
 ### Markdown for the figure
@@ -2275,7 +2292,7 @@ hab_cols <- c(forest = "darkolivegreen4",
 # Shapes for sites
 site_pch <- c(A = 16, B = 17, C = 15, D = 18)
 
-png("files/fig6_2_5_nitrogen_vs_phosphorus.png", width = 1600, height = 1200, res = 300)
+# png("files/fig6_2_5_nitrogen_vs_phosphorus.png", width = 1600, height = 1200, res = 300)
 
 plot(
   eco$nitrogen_ppm,
@@ -2304,7 +2321,7 @@ legend(
   title  = "Site"
 )
 
-dev.off()
+# dev.off()
 ```
 
 ### Markdown for the figure
@@ -2324,14 +2341,14 @@ To obtain a quick overview of **pairwise relationships** between several numeric
 ```  
 vars_for_pairs <- c("height_cm", "biomass_g", "soil_moisture", "light_intensity")
 
-png("files/fig6_2_6_pairs_selected_numeric.png", width = 2000, height = 2000, res = 300)
+# png("files/fig6_2_6_pairs_selected_numeric.png", width = 2000, height = 2000, res = 300)
 
 pairs(
   eco[, vars_for_pairs],
   main = "Pairwise relationships between selected variables"
 )
 
-dev.off()
+# dev.off()
 ```
 
 ### Markdown for the figure
@@ -3202,7 +3219,7 @@ At this point we have reached 5 dimensions in a single plot.
 Additional dimensions (labels and facets) will be implemented in the exercise section as an advanced task.
 
 ---
-
+<!--
 # 6.6 Exporting Publication-Ready Figures
 [↑ Back to top](#effective-data-visualization-in-research)
 
@@ -3217,7 +3234,7 @@ This section demonstrates:
 << content to be added >>
 
 ---
-
+-->
 
 <!--
 # 6. Data Visualization in R
@@ -3251,6 +3268,9 @@ This section demonstrates:
 
 -->
 
+
+---
+<!--================================================================================================================================================================================= -->
 ---
 
 
