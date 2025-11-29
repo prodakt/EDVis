@@ -3274,6 +3274,295 @@ Design a single 2D figure (built with ggplot2) that encodes information from **n
 *Hint:* There is no single “correct” solution. The objective is to explore the limits of multi-dimensional encoding and to think critically about **readability vs information density** in scientific visualizations.
 
 
+### Solutions
+
+# 7. Suggested Solutions
+[↑ Back to top](#effective-data-visualization-in-research)
+
+The following sections provide suggested solutions and commentary for the exercises in Section 7.
+
+---
+
+## Solution to Exercise 1 — Vector vs raster in a composite figure
+
+**Key observation**
+
+- **Vector graphics (text, shapes, vector plots)** are resolution-independent.  
+  When you zoom in (e.g. 400–1600%), edges remain perfectly sharp, curves remain smooth, and text is crisp.
+- **Raster graphics (bitmaps such as PNG, JPG, TIFF)** are made of pixels.  
+  When zoomed in aggressively, individual pixels become visible, edges become jagged, and the image appears blurry or blocky.
+
+**Practical conclusion**
+
+- Whenever possible, scientific plots (especially those containing **fine details** such as labels, axes, legends, small glyphs) should be generated in a **vector format** (PDF, SVG, EPS) or embedded as vector objects in the final figure (e.g. exported from R/ggplot2 as PDF and arranged in Inkscape).
+- Raster images are still necessary for:
+  - microscopy,
+  - gels/blots,
+  - ray-traced molecular graphics (e.g. PyMOL, POV-Ray),
+  - heatmaps with very high pixel density.
+- Complex plots such as **Circos diagrams** or dense genomic tracks benefit strongly from vector output, because:
+  - all small labels and tick marks remain readable even at high zoom,
+  - the figure can be resized for different layouts (single-column, double-column, poster) without quality loss.
+
+In practice, a **hybrid approach** is often used:
+
+- main plot and annotations → **vector**,  
+- embedded raster elements (e.g. molecular rendering, microscopy images) → **high-resolution TIFF/PNG**,  
+- final assembly → **PDF** (which can contain both vector and raster layers).
+
+---
+
+## Solution to Exercise 2 — IJMS-compliant TIFF export from ggplot2
+
+Below is a detailed, step-by-step example of exporting an IJMS-style figure (PCA plot) as a TIFF file and then checking it in IrfanView.
+
+### Step 1 — Run PCA on the eco_measurements dataset
+
+```  
+# Load dataset
+eco <- read.csv("files/eco_measurements.csv", stringsAsFactors = FALSE)
+
+eco$site         <- factor(eco$site)
+eco$habitat_type <- factor(eco$habitat_type)
+
+# Select numeric columns for PCA
+num_cols    <- sapply(eco, is.numeric)
+eco_numeric <- eco[, num_cols]
+
+# PCA with centering and scaling
+pca <- prcomp(eco_numeric, center = TRUE, scale. = TRUE)
+
+# Variance explained by each PC
+var_exp <- (pca$sdev^2) / sum(pca$sdev^2)
+pc1_var <- round(var_exp[1] * 100, 1)
+pc2_var <- round(var_exp[2] * 100, 1)
+
+# Combine PCA scores with grouping variables
+pca_scores <- as.data.frame(pca$x)
+pca_scores$habitat_type <- eco$habitat_type
+pca_scores$site         <- eco$site
+```
+
+### Step 2 — Create a clear PCA visualization with ggplot2
+
+```  
+library(ggplot2)
+
+p_pca <- ggplot(
+  pca_scores,
+  aes(x = PC1, y = PC2,
+      color = habitat_type,
+      shape = site)
+) +
+  geom_point(alpha = 0.7, size = 2) +
+  labs(
+    title = "PCA of eco_measurements dataset",
+    x = paste0("PC1 (", pc1_var, "%)"),
+    y = paste0("PC2 (", pc2_var, "%)"),
+    color = "Habitat type",
+    shape = "Site"
+  ) +
+  theme_bw(base_size = 12) +
+  theme(
+    plot.title      = element_text(hjust = 0.5),
+    legend.position = "right",
+    panel.grid      = element_line(linewidth = 0.2)
+  )
+
+# Optional on-screen preview:
+# print(p_pca)
+```
+
+### Step 3 — Export as TIFF with IJMS-style parameters
+
+According to IJMS guidelines, figures should be at least **300 dpi** and **≥ 1000 px** in each dimension, in **RGB (8 bits per channel)**, preferably **TIFF, JPEG, EPS, or PDF**.
+
+Below we export a square figure of **180 mm × 180 mm at 300 dpi**, using **LZW compression**:
+
+```  
+tiff(
+  filename    = "files/fig_IJMS_PCA_eco.tiff",
+  width       = 180,     # width in millimetres
+  height      = 180,     # height in millimetres
+  units       = "mm",
+  res         = 300,     # 300 dpi
+  compression = "lzw"    # lossless compression
+)
+
+print(p_pca)
+
+dev.off()
+```
+
+**What this does:**
+
+- `units = "mm"` and `width/height = 180` → physical size appropriate for many journal figures.  
+- `res = 300` → 300 dpi (dots per inch), standard for high-quality publication figures.  
+- `compression = "lzw"` → lossless compression, commonly accepted by journals.
+
+### Step 4 — Verify the file in IrfanView
+
+1. Open `fig_IJMS_PCA_eco.tiff` in **IrfanView**.
+2. Check:
+   - **Image properties** (Image → Information…):
+     - resolution (should show 300 dpi),
+     - dimensions (in pixels and cm),
+     - color depth (typically 24-bit RGB = 8 bits per channel).
+3. If required by the journal or for file size optimization:
+   - Convert color depth to **8 bits per channel** (e.g. using Image → Decrease Color Depth… or a similar function).
+   - Make sure to keep **LZW compression** enabled when saving.
+4. Compare **file sizes**:
+   - Before modification (original export from R),
+   - After color depth reduction and LZW compression.
+   - Discuss whether size reduction is significant and whether there is any visible impact on figure quality.
+
+---
+
+## Solution to Exercise 3 — 9-dimensional visualization using ggplot2
+
+We want to construct a 2D plot that encodes information from **nine different variables** in the `eco_measurements` dataset.
+
+A possible mapping (based on the idea: x, y, color, shape, size, shade, labels, multi-panel) is:
+
+1. **Dimension 1** – x-axis:          `height_cm`  
+2. **Dimension 2** – y-axis:          `leaf_area_cm2`  
+3. **Dimension 3** – color (hue):     `habitat_type`  
+4. **Dimension 4** – shape:           `site`  
+5. **Dimension 5** – point size:      `biomass_g`  
+6. **Dimension 6** – color shade / transparency (`alpha`): a numeric variable such as `soil_moisture`  
+7. **Dimension 7** – faceting within one figure: `species` (small multiples)  
+8. **Dimension 8** – text labels for selected points: e.g. points with highest `growth_rate_cm_week`  
+9. **Dimension 9** – multi-panel figure A/B: two complementary views combined into one composite figure (e.g. full range vs zoomed-in region)
+
+Poniżej przykładowa implementacja takiej „9D” koncepcji.
+
+### Step 1 — Prepare a subset of points to label
+
+We will label a small number of biologically “interesting” points, e.g. those with highest growth rate.
+
+```  
+library(dplyr)
+
+# Select a subset of points to label (e.g. top 15 by growth rate)
+label_df <- eco %>%
+  arrange(desc(growth_rate_cm_week)) %>%
+  slice(1:15)
+```
+
+### Step 2 — Build the main 5D+2D (facets + labels) ggplot
+
+- x = `height_cm`  
+- y = `leaf_area_cm2`  
+- color = `habitat_type`  
+- shape = `site`  
+- size = `biomass_g`  
+- alpha = scaled `soil_moisture`  
+- facets = `species`  
+- labels = subset of points (`label_df`)
+
+For labels we can use either `geom_text()` or, for nicer placement, `ggrepel` (optional).
+
+```  
+# Optional: if you want nicer labels without overlap
+# install.packages("ggrepel")
+library(ggrepel)
+
+p_9D_main <- ggplot(
+  eco,
+  aes(
+    x     = height_cm,
+    y     = leaf_area_cm2,
+    color = habitat_type,
+    shape = site,
+    size  = biomass_g,
+    alpha = soil_moisture
+  )
+) +
+  geom_point() +
+  # Facet by species (Dimension 7)
+  facet_wrap(~ species) +
+  # Add labels for selected points (Dimension 8)
+  geom_text_repel(
+    data = label_df,
+    aes(
+      x     = height_cm,
+      y     = leaf_area_cm2,
+      label = paste0("ID_", row_number())
+    ),
+    size        = 3,
+    color       = "black",
+    min.segment.length = 0,
+    max.overlaps       = 50,
+    inherit.aes        = FALSE
+  ) +
+  scale_size_continuous(range = c(1.5, 5)) +
+  scale_alpha_continuous(range = c(0.4, 1.0)) +
+  labs(
+    title = "High-dimensional ecological visualization (main view)",
+    x = "Height (cm)",
+    y = "Leaf Area (cm²)",
+    color = "Habitat type",
+    shape = "Site",
+    size  = "Biomass (g)",
+    alpha = "Soil moisture"
+  ) +
+  theme_bw(base_size = 11) +
+  theme(
+    plot.title      = element_text(hjust = 0.5),
+    legend.position = "right"
+  )
+```
+
+This single ggplot already encodes:
+
+1. x (height)  
+2. y (leaf area)  
+3. color (habitat type)  
+4. shape (site)  
+5. size (biomass)  
+6. alpha / shade (soil moisture)  
+7. facets (species)  
+8. labels (selected high-growth points)  
+
+### Step 3 — Add Dimension 9: multi-panel composite figure (A and B)
+
+We can define a **zoomed-in view** as a second plot and combine both into a multi-panel figure (A: full range, B: zoomed-in region). This adds a ninth dimension: **panel identity / context**.
+
+```  
+# Create a zoomed-in version of the same plot (e.g. focusing on moderate heights)
+p_9D_zoom <- p_9D_main +
+  coord_cartesian(xlim = c(40, 80), ylim = c(50, 250)) +
+  labs(title = "High-dimensional ecological visualization (zoomed view)")
+
+# Combine plots into a composite figure A | B
+# install.packages("patchwork")  # if not installed
+library(patchwork)
+
+p_9D_combined <- p_9D_main + p_9D_zoom +
+  plot_annotation(tag_levels = "A")   # Automatically labels panels A, B
+```
+
+Now `p_9D_combined` is a **multi-panel figure (A and B)** that:
+
+- encodes **8 visual dimensions** inside each panel, and  
+- adds a **9th “dimension”** by providing two complementary views (global vs zoomed) within a single composite figure.
+
+### Summary
+
+This solution is **only one possible implementation**. The key ideas are:
+
+- Use **position (x, y)** for the most important numeric variables.  
+- Use **color, shape, size, alpha** for additional dimensions.  
+- Use **facets** to split high-level categories into separate panels.  
+- Use **labels** sparingly for the most important points.  
+- Use **multi-panel figures (A, B, C, …)** to split complexity into more interpretable views.  
+
+The pedagogical goal is not to force all nine dimensions into a single overcomplicated plot, but to show how far we can go before readability suffers—and how multi-panel figures can help maintain clarity.
+
+
+
+
+
 ---
 
 # Acknowledgements
