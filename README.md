@@ -3183,13 +3183,104 @@ This section demonstrates:
 # 7. Exercises
 [↑ Back to top](#effective-data-visualization-in-research)
 
-<< content to be added >>
+The following exercises are designed to consolidate the concepts discussed in this workshop:  
+vector vs raster graphics, journal-specific figure requirements, and high-dimensional data visualization in R.
+
+---
+
+## Exercise 1 — Vector vs raster in a composite figure (PowerPoint / Inkscape)
+
+**Goal:**  
+Understand the visual differences between vector text/graphics and embedded raster images when zooming in.
+
+**Tasks:**
+
+1. Open **PowerPoint** or **Inkscape** (or a similar vector-based illustration program).
+2. Create a new slide/page and:
+   - Add a **text box** with a short caption (e.g., “Example scientific figure – vector text + raster plot”).
+   - Insert a **raster image** (bitmap), for example one of the PNG plots generated earlier in this workshop (e.g. a ggplot PNG figure).
+3. Arrange the layout so that both the text and the raster image are clearly visible.
+4. Export the project to **PDF** (Portable Document Format).
+5. Open the resulting PDF in a PDF viewer (e.g. Adobe Acrobat Reader, a browser, or another PDF viewer).
+6. Zoom in strongly (e.g. 400–1600%) and carefully inspect:
+   - the **vector text** (the text you typed in PowerPoint/Inkscape),
+   - the **raster image** (the inserted bitmap plot).
+7. Answer the following questions (mentally or in a short report):
+   - How does the sharpness of the **vector text** change with zoom?
+   - How does the appearance of the **raster image** change (e.g. pixelation, blurry edges)?
+   - What are the implications of these differences for preparing **publication-quality figures** that combine text, arrows and raster plots or microscopy images?
+
+---
+
+## Exercise 2 — IJMS-compliant TIFF export from ggplot2
+
+**Goal:**  
+Generate a publication-ready figure in **TIFF** format that satisfies the *International Journal of Molecular Sciences (IJMS)* technical requirements, and verify its properties using IrfanView.
+
+**Tasks:**
+
+1. Read the **“Figures” / “Original Images”** section in the IJMS *Instructions for Authors*  
+   (https://www.mdpi.com/journal/ijms/instructions), focusing on:
+   - required **resolution** (e.g. ≥ 1000 px or 300 dpi),
+   - acceptable **file formats** (TIFF, JPEG, EPS, PDF),
+   - recommended **color space** (RGB, 8 bits per channel),
+   - any comments on compression or original image data.
+2. Using **R + ggplot2** and the `eco_measurements` dataset, generate a clear, well-labeled figure, for example:
+   - a PCA plot,
+   - a multi-dimensional scatterplot,
+   - or a boxplot summarizing a biologically meaningful comparison.
+3. Export this figure as a **TIFF** file using a graphical device such as:
+
+   - resolution: **300 dpi**  
+   - size: suitable for a journal figure (e.g. 150–180 mm width)  
+   - compression: **LZW**  
+
+4. Open the exported TIFF file in **IrfanView** (or a comparable image viewer) and verify:
+   - image **dimensions** (in pixels and in physical units, e.g. cm or inches),
+   - **resolution** (DPI),
+   - **color depth** (bits per channel).
+5. Using IrfanView (or similar software):
+   - Adjust the **color depth** to **8 bits per channel** (if supported),
+   - ensure that **LZW compression** is used when saving.
+6. Compare the **file size** before and after this modification:
+   - How did LZW compression and/or color depth reduction affect file size?
+   - Would this optimization be beneficial (or risky) for journal submission?
+
+---
+
+## Exercise 3 — 9-dimensional visualization using ggplot2
+
+**Goal:**  
+Design a single 2D figure (built with ggplot2) that encodes information from **nine different variables** (columns) of the `eco_measurements` dataset as clearly and interpretably as possible.
+
+**Tasks:**
+
+1. Choose **two numeric variables** to define the **2D plane** (x and y axes)  
+   – for example: `height_cm` (x) and `leaf_area_cm2` (y).
+2. Add further dimensions step by step, reusing concepts from Section 6.5:
+   - **color** (e.g. `habitat_type`),
+   - **shape** (e.g. `site`),
+   - **size** (e.g. `biomass_g`),
+   - **point transparency** (*alpha*, e.g. to indicate measurement reliability or another numeric variable),
+   - **line type** or **border style** (if overlaying model fits or confidence regions),
+   - **text labels** for selected points (e.g. using `geom_text()` or `geom_label()`),
+   - **facets** (e.g. `facet_wrap(~ species)` or another factor).
+3. Construct a ggplot2 figure that uses a combination of these encodings so that **in total 9 variables** (columns) from `eco_measurements` are represented in a single composite graphic.
+4. Reflect on:
+   - Which dimensions are still easy to interpret?
+   - At which point does the figure become overloaded or confusing?
+   - How could you split the information into **multi-panel figures** (A, B, C, …) to improve clarity while still conveying all 9 dimensions?
+
+*Hint:* There is no single “correct” solution. The objective is to explore the limits of multi-dimensional encoding and to think critically about **readability vs information density** in scientific visualizations.
+
 
 ---
 
 # Acknowledgements
 
 Workshop developed by  
-**dr Jan Paweł Jastrzębski**  
+**dr Jan Paweł Jastrzębski** 
+[bioinformatyka@gmail.com](mailto:bioinformatyka@gmail.com)
+ORCID ID: [0000-0001-8699-7742](https://orcid.org/0000-0001-8699-7742)
 University of Warmia and Mazury in Olsztyn
 
