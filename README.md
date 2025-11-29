@@ -3655,9 +3655,34 @@ The pedagogical goal is not to force all nine dimensions into a single overcompl
 
 
 
+---
+<!--================================================================================================================================================================================= -->
+---
 
+
+# 7. Examples
+[↑ Back to top](#effective-data-visualization-in-research)
+
+
+## Circos 
+vector oh very high quality
+https://doi.org/10.3390/ani15182667 - Fig.4
+https://www.mdpi.com/1422-0067/24/6/5946 - Fig.5
+https://doi.org/10.3390/ijms23147642 - Fig.5
+
+## PuMOL
+https://doi.org/10.3390/ijms23147642 - Fig.9
+https://doi.org/10.1002/jnr.23462 - Cover Image
+https://rdcu.be/eSndu - https://doi.org/10.1038/s41598-017-06781-0
+
+## Multiplot
+https://www.mdpi.com/1422-0067/24/6/5946 - Fig.1
+https://doi.org/10.3390/ijms23147642 - Fig.3
 
 ---
+<!--================================================================================================================================================================================= -->
+---
+
 
 # Acknowledgements
 
