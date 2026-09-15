@@ -1,5 +1,7 @@
 # Effective Data Visualization in Research  
 <!---### University of Oulu, Finland — 3 December 2025 -->
+Jan Pawel Jastrzebski
+bioinformatyka@gmail.com
 
 ---
 
