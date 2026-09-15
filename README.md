@@ -2,7 +2,7 @@
 <!---### University of Oulu, Finland — 3 December 2025 -->
 Jan Pawel Jastrzebski
 bioinformatyka@gmail.com
-
+ORCID ID: [0000-0001-8699-7742](https://orcid.org/0000-0001-8699-7742)
 ---
 
 ## Summary
